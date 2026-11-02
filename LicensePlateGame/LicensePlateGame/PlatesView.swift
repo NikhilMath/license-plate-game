@@ -4,11 +4,11 @@ struct PlatesView: View {
     @Environment(GameStore.self) private var store
 
     enum Filter: String, CaseIterable, Identifiable {
-        case all = "All", needed = "Needed", spotted = "Spotted"
+        case needed = "Needed", spotted = "Spotted", all = "All"
         var id: String { rawValue }
     }
 
-    @State private var filter: Filter = .all
+    @State private var filter: Filter = .needed
     @State private var search = ""
     @State private var pendingRemoval: USState?
     @State private var spotCount = 0
