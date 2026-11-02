@@ -85,5 +85,7 @@ struct USState: Identifiable, Hashable {
         USState(code: "WY", name: "Wyoming", nickname: "Equality State", region: .west),
     ]
 
-    static let byCode: [String: USState] = Dictionary(uniqueKeysWithValues: all.map { ($0.code, $0) })
+    static let alphabetical: [USState] = all.sorted { $0.name < $1.name }
+
+    static let byCode:[String: USState] = Dictionary(uniqueKeysWithValues: all.map { ($0.code, $0) })
 }

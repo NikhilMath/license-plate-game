@@ -24,6 +24,10 @@ final class GameStore {
     var currentPlayerID: UUID? {
         didSet { save() }
     }
+    /// The phone owner, whose plate count is posted to Game Center.
+    var mePlayerID: UUID? {
+        didSet { save() }
+    }
 
     private let fileURL: URL
 
@@ -36,6 +40,10 @@ final class GameStore {
 
     var currentPlayer: Player? {
         players.first { $0.id == currentPlayerID } ?? players.first
+    }
+
+    var me: Player? {
+        players.first { $0.id == mePlayerID } ?? players.first
     }
 
     /// Players sorted for the leaderboard: most plates first, earliest to reach that count breaks ties.
@@ -57,6 +65,7 @@ final class GameStore {
         let player = Player(name: name, colorIndex: colorIndex)
         players.append(player)
         if currentPlayerID == nil { currentPlayerID = player.id }
+        if mePlayerID == nil { mePlayerID = player.id }
         return player
     }
 
@@ -68,6 +77,7 @@ final class GameStore {
     func remove(_ player: Player) {
         players.removeAll { $0.id == player.id }
         if currentPlayerID == player.id { currentPlayerID = players.first?.id }
+        if mePlayerID == player.id { mePlayerID = players.first?.id }
     }
 
     func setSpotted(_ state: USState, _ spotted: Bool, for player: Player) {
@@ -84,6 +94,7 @@ final class GameStore {
     private struct Snapshot: Codable {
         var players: [Player]
         var currentPlayerID: UUID?
+        var mePlayerID: UUID?
     }
 
     private var isLoading = false
@@ -94,12 +105,13 @@ final class GameStore {
         isLoading = true
         players = snapshot.players
         currentPlayerID = snapshot.currentPlayerID
+        mePlayerID = snapshot.mePlayerID
         isLoading = false
     }
 
     private func save() {
         guard !isLoading else { return }
-        let snapshot = Snapshot(players: players, currentPlayerID: currentPlayerID)
+        let snapshot = Snapshot(players: players, currentPlayerID: currentPlayerID, mePlayerID: mePlayerID)
         if let data = try? JSONEncoder().encode(snapshot) {
             try? data.write(to: fileURL, options: .atomic)
         }

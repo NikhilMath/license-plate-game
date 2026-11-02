@@ -2,6 +2,7 @@ import SwiftUI
 
 struct LeaderboardView: View {
     @Environment(GameStore.self) private var store
+    @Environment(GameCenter.self) private var gameCenter
 
     @State private var showingAdd = false
     @State private var newName = ""
@@ -14,18 +15,24 @@ struct LeaderboardView: View {
                     ForEach(Array(store.ranked.enumerated()), id: \.element.id) { index, player in
                         NavigationLink(value: player.id) {
                             LeaderboardRow(rank: rank(of: player, at: index), player: player,
-                                           isCurrent: player.id == store.currentPlayer?.id)
+                                           isCurrent: player.id == store.currentPlayer?.id,
+                                           isMe: player.id == store.me?.id && store.players.count > 1)
                         }
                         .swipeActions {
                             Button("Delete", role: .destructive) { store.remove(player) }
                                 .disabled(store.players.count == 1)
                         }
                     }
+                } header: {
+                    Text("On This Phone")
                 } footer: {
                     Text("Tap a player to see their plates. Swipe left to remove a player.")
                 }
+
+                WorldwideSection()
             }
             .navigationTitle("Leaderboard")
+            .refreshable { await gameCenter.loadEntries() }
             .navigationDestination(for: UUID.self) { id in
                 PlayerDetailView(playerID: id)
             }
@@ -68,10 +75,77 @@ struct LeaderboardView: View {
     }
 }
 
+private struct WorldwideSection: View {
+    @Environment(GameStore.self) private var store
+    @Environment(GameCenter.self) private var gameCenter
+
+    var body: some View {
+        Section {
+            switch gameCenter.status {
+            case .signingIn:
+                HStack {
+                    ProgressView()
+                    Text("Signing in to Game Center…").foregroundStyle(.secondary)
+                }
+            case .signedOut(let message):
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Sign in to Game Center to compete with everyone who plays.")
+                    Text(message).font(.caption).foregroundStyle(.secondary)
+                    Button("Sign In") { gameCenter.authenticate() }
+                        .buttonStyle(.bordered)
+                }
+                .padding(.vertical, 4)
+            case .signedIn:
+                if let error = gameCenter.loadError {
+                    Label(error, systemImage: "exclamationmark.triangle")
+                        .foregroundStyle(.secondary)
+                } else if gameCenter.entries.isEmpty {
+                    HStack {
+                        if gameCenter.isLoading { ProgressView() }
+                        Text(gameCenter.isLoading ? "Loading scores…" : "No scores yet. Be the first!")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                ForEach(gameCenter.entries) { entry in
+                    HStack(spacing: 14) {
+                        Text("#\(entry.rank)")
+                            .font(.headline.monospacedDigit())
+                            .foregroundStyle(entry.rank <= 3 ? .orange : .secondary)
+                            .frame(width: 44, alignment: .leading)
+                        Text(entry.name)
+                            .fontWeight(entry.isLocalPlayer ? .bold : .regular)
+                        if entry.isLocalPlayer {
+                            Text("YOU")
+                                .font(.caption2.bold())
+                                .padding(.horizontal, 6).padding(.vertical, 2)
+                                .background(.blue.opacity(0.15), in: Capsule())
+                                .foregroundStyle(.blue)
+                        }
+                        Spacer()
+                        Text("\(entry.score)")
+                            .font(.headline.monospacedDigit())
+                    }
+                    .listRowBackground(entry.isLocalPlayer ? Color.blue.opacity(0.08) : nil)
+                }
+                Button("Open in Game Center", systemImage: "gamecontroller") {
+                    gameCenter.showGameCenterLeaderboard()
+                }
+            }
+        } header: {
+            Text("Worldwide")
+        } footer: {
+            if gameCenter.isSignedIn, let me = store.me {
+                Text("Posting \(me.name)'s best count as \(gameCenter.playerName). Pull down to refresh.")
+            }
+        }
+    }
+}
+
 private struct LeaderboardRow: View {
     let rank: Int
     let player: Player
     let isCurrent: Bool
+    let isMe: Bool
 
     var body: some View {
         HStack(spacing: 14) {
@@ -81,6 +155,12 @@ private struct LeaderboardRow: View {
             VStack(alignment: .leading, spacing: 6) {
                 HStack {
                     Text(player.name).font(.headline)
+                    if isMe {
+                        Image(systemName: "gamecontroller.fill")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .accessibilityLabel("Posts to Game Center")
+                    }
                     if isCurrent {
                         Text("PLAYING")
                             .font(.caption2.bold())
@@ -129,7 +209,7 @@ struct PlayerDetailView: View {
             let spotted = player.spotted
                 .compactMap { code, date in USState.byCode[code].map { ($0, date) } }
                 .sorted { $0.1 > $1.1 }
-            let needed = USState.all.filter { !player.hasSpotted($0) }
+            let needed = USState.alphabetical.filter { !player.hasSpotted($0) }
 
             List {
                 Section {
@@ -137,6 +217,14 @@ struct PlayerDetailView: View {
                         store.currentPlayerID = player.id
                     }
                     .disabled(store.currentPlayer?.id == player.id)
+                    Button("This Is Me (Game Center)", systemImage: "gamecontroller") {
+                        store.mePlayerID = player.id
+                    }
+                    .disabled(store.me?.id == player.id)
+                } footer: {
+                    if store.me?.id == player.id {
+                        Text("\(player.name)'s count is posted to the worldwide Game Center leaderboard.")
+                    }
                 }
                 Section("Spotted (\(spotted.count))") {
                     if spotted.isEmpty {

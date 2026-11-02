@@ -30,26 +30,15 @@ struct PlatesView: View {
                     .padding(.horizontal)
                     .padding(.top, 8)
 
-                    LazyVStack(alignment: .leading, spacing: 18, pinnedViews: []) {
-                        ForEach(Region.allCases) { region in
-                            let states = visibleStates(in: region, for: player)
-                            if !states.isEmpty {
-                                Text(region.rawValue)
-                                    .font(.headline)
-                                    .foregroundStyle(region.color)
-                                    .padding(.horizontal)
-                                LazyVGrid(columns: columns, spacing: 16) {
-                                    ForEach(states) { state in
-                                        plateButton(state, player: player)
-                                    }
-                                }
-                                .padding(.horizontal)
-                            }
+                    let states = visibleStates(for: player)
+                    LazyVGrid(columns: columns, spacing: 16) {
+                        ForEach(states) { state in
+                            plateButton(state, player: player)
                         }
                     }
-                    .padding(.vertical)
+                    .padding()
 
-                    if Region.allCases.allSatisfy({ visibleStates(in: $0, for: player).isEmpty }) {
+                    if states.isEmpty {
                         ContentUnavailableView(emptyTitle, systemImage: "car.rear.road.lane")
                             .padding(.top, 40)
                     }
@@ -100,10 +89,9 @@ struct PlatesView: View {
         .buttonStyle(.plain)
     }
 
-    private func visibleStates(in region: Region, for player: Player) -> [USState] {
+    private func visibleStates(for player: Player) -> [USState] {
         let query = search.trimmingCharacters(in: .whitespaces)
-        return USState.all.filter { state in
-            guard state.region == region else { return false }
+        return USState.alphabetical.filter { state in
             switch filter {
             case .all: break
             case .needed: if player.hasSpotted(state) { return false }

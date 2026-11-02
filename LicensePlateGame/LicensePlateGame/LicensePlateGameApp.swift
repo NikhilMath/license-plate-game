@@ -3,11 +3,17 @@ import SwiftUI
 @main
 struct LicensePlateGameApp: App {
     @State private var store = GameStore()
+    @State private var gameCenter = GameCenter()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environment(store)
+                .environment(gameCenter)
+                .task { gameCenter.authenticate() }
+                .onChange(of: store.me?.count, initial: true) { _, count in
+                    if let count { gameCenter.submit(count) }
+                }
         }
     }
 }
