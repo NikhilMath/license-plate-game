@@ -6,6 +6,8 @@ A guide for AI coding agents working in this repo. **Keep this file current:** w
 
 - **Commit and push every finished change to `main`.** Don't wait to be asked. If you're working on another branch or in a worktree, push that branch too, then fast-forward `main` (`git push origin HEAD:main`).
 - Update this file in the same commit as the change it describes.
+- **Ship every finished app change to App Store Connect** (archive and upload, see "Shipping a new build") so it reaches TestFlight. The owner asked for this on 2026-11-06. Uploading is fine without asking. Still ask before submitting a build to Beta App Review or App Store review.
+- `git push` needs a `Bash(git push:*)` allow rule in `.claude/settings.json`. Claude Code's auto mode blocks pushes otherwise, and Claude can't add the rule itself.
 - Confirm with the owner before anything irreversible or outward-facing in Apple's consoles: submitting for review, inviting testers, or deploying a schema to Production.
 - For public-facing contact details, use **nikhil@nikhilmath.com**.
 
@@ -69,6 +71,7 @@ xcrun devicectl device process launch --terminate-existing --device 00008150-000
 
 - App record: **"Plate Chase: 50 States + DC"** (app id `6831714785`). The name "Plate Chase" was taken.
 - Build **1.0 (1)** was submitted to Beta App Review on 2026-11-06.
+- Build **1.0 (2)** was uploaded on 2026-11-06. It has the Production-CloudKit entitlement and the clearer "no group found" message. It goes to **Me** automatically. It is not yet added to **Friends**.
 - Groups:
   - **Me** (internal): the owner. Gets every build automatically, with no review.
   - **Friends** (external): public link https://testflight.apple.com/join/yKKYG9Dh, limit 25. Grayson (grayson.nielsen@gmail.com) is invited.
