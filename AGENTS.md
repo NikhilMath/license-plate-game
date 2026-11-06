@@ -62,7 +62,8 @@ xcrun devicectl device process launch --terminate-existing --device 00008150-000
 - A phone only writes its own records. Friends are found with a query on `groupCode`, which has a QUERYABLE index.
 - Group codes are 6 characters from `ABCDEFGHJKMNPQRSTUVWXYZ23456789`.
 - The schema was **deployed to Production on 2026-11-06**. If you add or change fields, the change lands in Development first. Deploy it in the CloudKit Console before shipping a TestFlight or App Store build, because those use Production.
-- Debug builds from Xcode use the **Development** environment, and TestFlight builds use **Production**. Their data is separate.
+- **Every build uses Production**, including Debug builds from Xcode. The entitlements file sets `com.apple.developer.icloud-container-environment = Production`. This was added on 2026-11-06 after a Debug build couldn't join a group made in TestFlight, because Development and Production data are separate.
+- Production won't create new record types or fields automatically. To change the schema, temporarily set that entitlement to `Development`, run once to create the fields, deploy them to Production in the console, then set it back.
 
 ## App Store Connect and TestFlight
 
