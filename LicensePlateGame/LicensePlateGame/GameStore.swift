@@ -24,6 +24,14 @@ final class GameStore {
     var currentPlayerID: UUID? {
         didSet { save() }
     }
+    /// Code of the friend group this phone has joined, if any.
+    var groupCode: String? {
+        didSet { save() }
+    }
+    /// Players on friends' phones, as last synced. Kept so the leaderboard works offline.
+    private(set) var friends: [Player] = [] {
+        didSet { save() }
+    }
 
     private let fileURL: URL
 
@@ -38,16 +46,23 @@ final class GameStore {
         players.first { $0.id == currentPlayerID } ?? players.first
     }
 
+    /// Players on this phone plus friends' players.
+    var everyone: [Player] { players + friends }
+
+    func isFriend(_ id: UUID) -> Bool {
+        friends.contains { $0.id == id }
+    }
+
     /// Players sorted for the leaderboard: most plates first, earliest to reach that count breaks ties.
     var ranked: [Player] {
-        players.sorted {
+        everyone.sorted {
             if $0.count != $1.count { return $0.count > $1.count }
             return ($0.spotted.values.max() ?? .distantFuture) < ($1.spotted.values.max() ?? .distantFuture)
         }
     }
 
     func spotters(of state: USState) -> [Player] {
-        players.filter { $0.hasSpotted(state) }
+        everyone.filter { $0.hasSpotted(state) }
     }
 
     @discardableResult
@@ -75,6 +90,21 @@ final class GameStore {
         players[i].spotted[state.code] = spotted ? Date() : nil
     }
 
+    /// Replaces the friends list, giving friends colors not used by this phone's players.
+    func setFriends(_ list: [Player]) {
+        let used = Set(players.map(\.colorIndex))
+        var free = (0..<Player.palette.count).filter { !used.contains($0) }
+        if free.isEmpty { free = Array(0..<Player.palette.count) }
+        friends = list
+            .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+            .enumerated()
+            .map { index, friend in
+                var friend = friend
+                friend.colorIndex = free[index % free.count]
+                return friend
+            }
+    }
+
     func resetAllPlates() {
         for i in players.indices { players[i].spotted = [:] }
     }
@@ -84,6 +114,8 @@ final class GameStore {
     private struct Snapshot: Codable {
         var players: [Player]
         var currentPlayerID: UUID?
+        var groupCode: String?
+        var friends: [Player]?
     }
 
     private var isLoading = false
@@ -94,12 +126,15 @@ final class GameStore {
         isLoading = true
         players = snapshot.players
         currentPlayerID = snapshot.currentPlayerID
+        groupCode = snapshot.groupCode
+        friends = snapshot.friends ?? []
         isLoading = false
     }
 
     private func save() {
         guard !isLoading else { return }
-        let snapshot = Snapshot(players: players, currentPlayerID: currentPlayerID)
+        let snapshot = Snapshot(players: players, currentPlayerID: currentPlayerID,
+                                groupCode: groupCode, friends: friends)
         if let data = try? JSONEncoder().encode(snapshot) {
             try? data.write(to: fileURL, options: .atomic)
         }

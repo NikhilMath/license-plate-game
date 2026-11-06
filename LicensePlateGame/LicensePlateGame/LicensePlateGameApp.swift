@@ -2,12 +2,29 @@ import SwiftUI
 
 @main
 struct LicensePlateGameApp: App {
-    @State private var store = GameStore()
+    @State private var store: GameStore
+    @State private var friendSync: FriendSync
+
+    init() {
+        let store = GameStore()
+        _store = State(initialValue: store)
+        _friendSync = State(initialValue: FriendSync(store: store))
+    }
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environment(store)
+                .environment(friendSync)
+                .onChange(of: store.players) { old, new in
+                    friendSync.playersChanged(from: old, to: new)
+                }
+                .task(id: store.groupCode) {
+                    while !Task.isCancelled {
+                        await friendSync.sync()
+                        try? await Task.sleep(for: .seconds(30))
+                    }
+                }
         }
     }
 }
