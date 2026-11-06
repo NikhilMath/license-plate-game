@@ -24,7 +24,22 @@ Friend groups store each player as a `Member` record in the public database of t
 
 ## Getting friends to play (TestFlight)
 
-1. In [App Store Connect](https://appstoreconnect.apple.com) → **Apps** → **+** → **New App**: iOS, name "Plate Chase" (or any name that isn't taken), bundle ID `com.nikhilmath.licenseplategame`, any SKU.
-2. Upload a build: in Xcode choose **Product → Archive**, then **Distribute App → TestFlight & App Store**.
-3. In App Store Connect → the app → **TestFlight** → **External Testing** → **+** to create a group. Add the build, then turn on **Public Link**. Apple reviews the first external build, which usually takes under a day.
-4. Send friends the public link. They install **TestFlight** from the App Store, open the link, and tap **Install**.
+The app is set up in App Store Connect as **Plate Chase: 50 States + DC** (bundle ID `com.nikhilmath.licenseplategame`). The home-screen name is still "Plate Chase".
+
+- **Public link** for the "Friends" external group (25-tester limit): https://testflight.apple.com/join/yKKYG9Dh. It works once Beta App Review approves a build. Friends install **TestFlight** from the App Store, then open the link.
+- To invite someone by email: App Store Connect → the app → **TestFlight** → **Friends** → **Testers +** → **Email**.
+- The internal **"Me"** group gets every new build automatically, with no review.
+
+### Shipping a new build
+
+1. Bump `CURRENT_PROJECT_VERSION` in the Xcode project. Uploads also bump it automatically through `manageAppVersionAndBuildNumber`.
+2. Archive and upload:
+   ```bash
+   cd LicensePlateGame
+   xcodebuild -project LicensePlateGame.xcodeproj -scheme LicensePlateGame -configuration Release \
+     -destination 'generic/platform=iOS' -archivePath build/PlateChase.xcarchive -allowProvisioningUpdates archive
+   xcodebuild -exportArchive -archivePath build/PlateChase.xcarchive -exportOptionsPlist ExportOptions.plist \
+     -exportPath build/export -allowProvisioningUpdates
+   ```
+3. In TestFlight, add the build to **Friends** and submit it for review. Later builds are usually approved faster.
+4. If the CloudKit schema changed, deploy it to Production first in the CloudKit Console.
