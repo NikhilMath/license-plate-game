@@ -167,6 +167,9 @@ final class FriendSync {
 
     private func describe(_ error: Error) -> String {
         guard let ckError = error as? CKError else { return error.localizedDescription }
+        if ckError.localizedDescription.localizedCaseInsensitiveContains("container configuration") {
+            return "iCloud is still setting up Plate Chase's storage. Your plates will sync once it's ready."
+        }
         switch ckError.code {
         case .networkUnavailable, .networkFailure, .serviceUnavailable, .requestRateLimited:
             return "Can't reach iCloud right now. Friends' plates will update when you're back online."
