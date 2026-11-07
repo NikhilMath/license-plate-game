@@ -22,6 +22,14 @@ Friend groups store each player as a `Member` record in the public database of t
 3. Go to **Indexes** → record type **Member** → **Add Basic Index** → field `groupCode`, type **Queryable** → **Save Changes**.
 4. Before sending a TestFlight or App Store build, click **Deploy Schema Changes…** to copy the schema to **Production**. TestFlight builds use Production.
 
+## App Store listing
+
+- Support page: https://nikhilmath.github.io/license-plate-game/ (`docs/index.html`)
+- Privacy policy: https://nikhilmath.github.io/license-plate-game/privacy.html (`docs/privacy.html`)
+- GitHub Pages serves `docs/` from `main`. Update the privacy policy if the app starts storing or sharing anything new.
+- `docs/screenshots/` holds the App Store screenshots at 1206 × 2622 (6.3" iPhone, the size App Store Connect asks for). They were taken in the iPhone 18 Pro simulator with sample players.
+- Sold in the United States only, for free.
+
 ## Getting friends to play (TestFlight)
 
 The app is set up in App Store Connect as **Plate Chase: 50 States + DC** (bundle ID `com.nikhilmath.licenseplategame`). The home-screen name is still "Plate Chase".
