@@ -61,6 +61,24 @@ p, li { color: var(--text); }
 
 a { color: var(--accent); }
 
+.shots {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  margin: 0 0 24px;
+  padding-bottom: 8px;
+}
+
+.shots img {
+  width: 46%;
+  max-width: 220px;
+  flex: none;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  scroll-snap-align: start;
+}
+
 footer {
   margin-top: 40px;
   color: var(--muted);
