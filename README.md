@@ -31,6 +31,7 @@ The entitlements file sets `com.apple.developer.icloud-container-environment` to
 - GitHub Pages serves `docs/` from `main`. Update the privacy policy if the app starts storing or sharing anything new.
 - `docs/screenshots/` holds the App Store screenshots at 1206 × 2622 (6.3" iPhone, the size App Store Connect asks for). They were taken in the iPhone 18 Pro simulator with sample players.
 - Sold in the United States only, for free.
+- App Review notes and the screen-recording checklist for review: [`APP_REVIEW_NOTES.md`](APP_REVIEW_NOTES.md).
 
 ## Getting friends to play (TestFlight)
 

@@ -78,6 +78,12 @@ xcrun devicectl device process launch --terminate-existing --device 00008150-000
 - The Beta App Review contact is Nikhil Math, nikhil@nikhilmath.com. No sign-in is required.
 - TestFlight builds expire after 90 days.
 
+### App Store review
+
+- Version **1.0** (build 1.0 (2)) was submitted to App Store review on 2026-11-07. App Review sent it back the same day under **Guideline 2.1 - Information Needed**. They want a screen recording from a physical iPhone plus answers about purpose, setup, external services, regions, and third-party material, all in **App Review Information → Notes**.
+- [`APP_REVIEW_NOTES.md`](APP_REVIEW_NOTES.md) has the Notes text, the recording checklist, and how to resubmit. No new build is needed. The owner records the video and resubmits.
+- Listing: support page `docs/index.html`, privacy policy `docs/privacy.html` (GitHub Pages from `main`), screenshots in `docs/screenshots/` at 1206 × 2622. Sold in the US only, free. Update the privacy policy and the review notes if the app starts storing or sharing anything new.
+
 ### Shipping a new build
 
 ```bash
