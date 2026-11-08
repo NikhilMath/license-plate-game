@@ -81,7 +81,8 @@ xcrun devicectl device process launch --terminate-existing --device 00008150-000
 ### App Store review
 
 - Version **1.0** (build 1.0 (2)) was submitted to App Store review on 2026-11-07. App Review sent it back the same day under **Guideline 2.1 - Information Needed**. They want a screen recording from a physical iPhone plus answers about purpose, setup, external services, regions, and third-party material, all in **App Review Information → Notes**.
-- [`APP_REVIEW_NOTES.md`](APP_REVIEW_NOTES.md) has the Notes text, the recording checklist, and how to resubmit. No new build is needed. The owner records the video and resubmits.
+- [`APP_REVIEW_NOTES.md`](APP_REVIEW_NOTES.md) has the Notes text, the recording checklist, and how to resubmit. No new build is needed.
+- On 2026-11-07 the owner replied to App Review with the notes and the screen recording attached. The same text is saved in **App Review Information → Notes**, pointing to that reply for the video. The version shows **Ready for Review**. The owner still clicks **Resubmit to App Review** on the submission page, because Claude's browser click on that button was blocked.
 - Listing: support page `docs/index.html`, privacy policy `docs/privacy.html` (GitHub Pages from `main`), screenshots in `docs/screenshots/` at 1206 × 2622. Sold in the US only, free. Update the privacy policy and the review notes if the app starts storing or sharing anything new.
 
 ### Shipping a new build

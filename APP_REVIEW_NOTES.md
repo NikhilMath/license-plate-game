@@ -4,11 +4,11 @@ On 2026-11-07, App Review sent back version 1.0 (build 1.0 (2)) under **Guidelin
 
 ## Notes field (paste as is)
 
-Keep it under App Store Connect's 4,000-character limit. If the recording leaves out a step listed in section 1, remove that step from the text.
+This is the text saved in App Store Connect on 2026-11-07. Keep it under the 4,000-character limit. If a later recording leaves out a step listed in section 1, remove that step from the text. For a new recording, update the first line to say where the video is.
 
 ```text
 1. SCREEN RECORDING
-Attached. Recorded on an iPhone running the latest iOS, using build 1.0 (2). It starts at app launch and shows: entering a name on the welcome screen, spotting plates and removing one, the Needed / Spotted / All filter and search, adding a second player and switching between players, the Leaderboard and a player's detail page, creating a friend group, a second iPhone joining with the group code and showing up on the leaderboard, leaving the group, and New Road Trip.
+Attached to our Nov 7 reply in the App Review messages (ScreenRecording_11-07-2026 22-47-43_1.MP4). Recorded on an iPhone running the latest iOS, using build 1.0 (2). It starts at app launch and shows: entering a name on the welcome screen, spotting plates and removing one, the Needed / Spotted / All filter and search, adding a second player and switching between players, the Leaderboard and a player's detail page, creating a friend group, a second iPhone joining with the group code and showing up on the leaderboard, leaving the group, and New Road Trip.
 
 The app has no accounts, sign-in, or account creation, so there is no registration or account deletion flow. It has no purchases or paid features. It has no public user-generated content: a player's name and spotted plates are shared only with people who join the same private friend group by entering its 6-character code, and Leave Group removes them from the group.
 
@@ -46,6 +46,8 @@ Apple requires a recording from a **physical iPhone** on the **latest iOS**, sta
 
 ## Sending it back
 
-1. App Store Connect → **Plate Chase: 50 States + DC** → **Distribution** → **iOS App 1.0** → scroll to **App Review Information**.
-2. Paste the text above into **Notes** and add the video under **Attachment**. Then click **Save**.
-3. Click **Update Review** (top right), then resubmit. No new build is needed.
+What was done on 2026-11-07:
+
+1. The owner sent the notes and the video to Apple with **Reply to App Review** on the submission page. The reply's attachment is where the reviewer finds the video.
+2. The same text went into **Distribution → iOS App 1.0 → App Review Information → Notes**, then **Save**. The version status changed to **Ready for Review**.
+3. Last step: on the submission page (**App Review** in the sidebar → the 1.0 submission), click **Resubmit to App Review**. The status becomes **Waiting for Review**. No new build is needed.
