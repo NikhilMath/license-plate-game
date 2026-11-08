@@ -50,4 +50,4 @@ What was done on 2026-11-07:
 
 1. The owner sent the notes and the video to Apple with **Reply to App Review** on the submission page. The reply's attachment is where the reviewer finds the video.
 2. The same text went into **Distribution → iOS App 1.0 → App Review Information → Notes**, then **Save**. The version status changed to **Ready for Review**.
-3. Last step: on the submission page (**App Review** in the sidebar → the 1.0 submission), click **Resubmit to App Review**. The status becomes **Waiting for Review**. No new build is needed.
+3. The owner clicked **Resubmit to App Review** on the submission page (**App Review** in the sidebar → the 1.0 submission). The status became **Waiting for Review**. No new build was needed.
