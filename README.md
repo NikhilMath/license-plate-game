@@ -22,6 +22,8 @@ Friend groups store each player as a `Member` record in the public database of t
 3. Go to **Indexes** → record type **Member** → **Add Basic Index** → field `groupCode`, type **Queryable** → **Save Changes**.
 4. Before sending a TestFlight or App Store build, click **Deploy Schema Changes…** to copy the schema to **Production**. TestFlight builds use Production.
 
+The entitlements file sets `com.apple.developer.icloud-container-environment` to `Production`, so Xcode builds share groups with TestFlight builds. To work on schema changes, switch it to `Development` temporarily.
+
 ## App Store listing
 
 - Support page: https://nikhilmath.github.io/license-plate-game/ (`docs/index.html`)

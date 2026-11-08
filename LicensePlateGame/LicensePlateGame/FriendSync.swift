@@ -50,7 +50,7 @@ final class FriendSync {
                 return
             }
             if !isNew, try await fetchMembers(code).isEmpty {
-                error = "No group found with code \(code)."
+                error = "No group found with code \(code). Check the code, and make sure both phones have the TestFlight version."
                 return
             }
             if let old = store.groupCode, old != code {
