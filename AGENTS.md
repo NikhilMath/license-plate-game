@@ -91,7 +91,9 @@ xcrun devicectl device process launch --terminate-existing --device 00008150-000
 - [`APP_REVIEW_NOTES.md`](APP_REVIEW_NOTES.md) has the Notes text, the recording checklist, and how to resubmit. No new build is needed.
 - On 2026-11-07 the owner replied to App Review with the notes and the screen recording attached. The same text is saved in **App Review Information → Notes**, pointing to that reply for the video. The owner then clicked **Resubmit to App Review** (Claude's browser click on that button is blocked by auto mode, so the owner does it). Version 1.0 has been **Waiting for Review** since 2026-11-07.
 - By 2026-11-10 App Store Connect was treating **1.0 as approved**: an upload of another 1.0 build was refused with "must contain a higher version than that of the previously approved version [1.0]". Check the app's page in App Store Connect for whether it is live.
-- Version 1.1 needs its own App Store version record, "What's New" text, and a submission (ask the owner first). Add the game modes to `docs/index.html` and refresh the screenshots when it goes out.
+- Version **1.0** is live (Ready for Distribution).
+- Version **1.1** was set up on 2026-11-10 and is in **Prepare for Submission** with build 1.1 (1) attached. Its What's New text, promotional text, and description cover the game modes, and the review notes start with a "What's New in 1.1" section (also in `APP_REVIEW_NOTES.md`). It has **not** been submitted. Submitting means clicking **Add for Review** and then **Submit for Review** (ask the owner first). It is set to release automatically to all users as soon as App Review approves it.
+- The App Store screenshots still show 1.0, without the mode picker. They're optional to refresh, since every 1.0 screen still looks the same in Competitive mode.
 - Listing: support page `docs/index.html`, privacy policy `docs/privacy.html` (GitHub Pages from `main`), screenshots in `docs/screenshots/` at 1206 × 2622. Sold in the US only, free. Update the privacy policy and the review notes if the app starts storing or sharing anything new.
 
 ### Shipping a new build

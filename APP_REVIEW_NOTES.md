@@ -4,9 +4,12 @@ On 2026-11-07, App Review sent back version 1.0 (build 1.0 (2)) under **Guidelin
 
 ## Notes field (paste as is)
 
-This is the text saved in App Store Connect on 2026-11-07. Keep it under the 4,000-character limit. If a later recording leaves out a step listed in section 1, remove that step from the text. For a new recording, update the first line to say where the video is.
+This is the text saved in App Store Connect for version 1.1 on 2026-11-10 (the 1.0 text plus the "What's New in 1.1" section). Keep it under the 4,000-character limit. If a later recording leaves out a step listed in section 1, remove that step from the text. For a new recording, update the first line to say where the video is.
 
 ```text
+WHAT'S NEW IN 1.1
+A game mode picker at the top of the Leaderboard tab. Competitive (the default) works exactly as in 1.0. Co-op makes everyone share one list: a plate counts once anyone spots it, the second tab becomes Team, and players are listed by how many plates they found first. In a friend group the mode is shared through the same CloudKit records. No new data is collected or shared. The recording below shows 1.0; every flow in it is unchanged in Competitive mode.
+
 1. SCREEN RECORDING
 Attached to our Nov 7 reply in the App Review messages (ScreenRecording_11-07-2026 22-47-43_1.MP4). Recorded on an iPhone running the latest iOS, using build 1.0 (2). It starts at app launch and shows: entering a name on the welcome screen, spotting plates and removing one, the Needed / Spotted / All filter and search, adding a second player and switching between players, the Leaderboard and a player's detail page, creating a friend group, a second iPhone joining with the group code and showing up on the leaderboard, leaving the group, and New Road Trip.
 
