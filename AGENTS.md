@@ -66,7 +66,7 @@ xcrun devicectl device process launch --terminate-existing --device 00008150-000
 ## CloudKit (friend groups)
 
 - Container `iCloud.com.nikhilmath.licenseplategame`, **public database**, record type `Member`. Each local player is one record named `<GROUPCODE>-<player UUID>`, with fields `groupCode`, `playerID`, `name`, `count`, `spotted` (a JSON string mapping state code to date), plus `mode` (String, `competitive` or `coop`) and `modeChangedAt` (Date/Time). A group's mode is the one with the latest `modeChangedAt` on any member's record. A phone that has never changed the mode leaves both fields off.
-- **`mode` and `modeChangedAt` are not in the Production schema yet** (as of 2026-11-10). Until they're deployed, changing the mode while in a group makes that phone's uploads fail. Deploy them before uploading a build with game modes.
+- `mode` and `modeChangedAt` were added in the CloudKit Console and **deployed to Production on 2026-11-10**. Neither has an index, and neither needs one.
 - A phone only writes its own records. Friends are found with a query on `groupCode`, which has a QUERYABLE index.
 - Group codes are 6 characters from `ABCDEFGHJKMNPQRSTUVWXYZ23456789`.
 - The schema was **deployed to Production on 2026-11-06**. If you add or change fields, the change lands in Development first. Deploy it in the CloudKit Console before shipping a TestFlight or App Store build, because those use Production.
@@ -78,6 +78,7 @@ xcrun devicectl device process launch --terminate-existing --device 00008150-000
 - App record: **"Plate Chase: 50 States + DC"** (app id `6831714785`). The name "Plate Chase" was taken.
 - Build **1.0 (1)** was submitted to Beta App Review on 2026-11-06.
 - Build **1.0 (2)** was uploaded on 2026-11-06. It has the Production-CloudKit entitlement and the clearer "no group found" message. It goes to **Me** automatically. It is not yet added to **Friends**.
+- Build **1.1** was uploaded on 2026-11-10 with the co-op and competitive game modes. The 1.0 train is closed to new builds because 1.0 was approved, so `MARKETING_VERSION` is now 1.1. It goes to **Me** automatically. It is not yet added to **Friends** and has not been submitted for App Store review.
 - Groups:
   - **Me** (internal): the owner. Gets every build automatically, with no review.
   - **Friends** (external): public link https://testflight.apple.com/join/yKKYG9Dh, limit 25. Grayson (grayson.nielsen@gmail.com) is invited.
@@ -89,6 +90,8 @@ xcrun devicectl device process launch --terminate-existing --device 00008150-000
 - Version **1.0** (build 1.0 (2)) was submitted to App Store review on 2026-11-07. App Review sent it back the same day under **Guideline 2.1 - Information Needed**. They want a screen recording from a physical iPhone plus answers about purpose, setup, external services, regions, and third-party material, all in **App Review Information → Notes**.
 - [`APP_REVIEW_NOTES.md`](APP_REVIEW_NOTES.md) has the Notes text, the recording checklist, and how to resubmit. No new build is needed.
 - On 2026-11-07 the owner replied to App Review with the notes and the screen recording attached. The same text is saved in **App Review Information → Notes**, pointing to that reply for the video. The owner then clicked **Resubmit to App Review** (Claude's browser click on that button is blocked by auto mode, so the owner does it). Version 1.0 has been **Waiting for Review** since 2026-11-07.
+- By 2026-11-10 App Store Connect was treating **1.0 as approved**: an upload of another 1.0 build was refused with "must contain a higher version than that of the previously approved version [1.0]". Check the app's page in App Store Connect for whether it is live.
+- Version 1.1 needs its own App Store version record, "What's New" text, and a submission (ask the owner first). Add the game modes to `docs/index.html` and refresh the screenshots when it goes out.
 - Listing: support page `docs/index.html`, privacy policy `docs/privacy.html` (GitHub Pages from `main`), screenshots in `docs/screenshots/` at 1206 × 2622. Sold in the US only, free. Update the privacy policy and the review notes if the app starts storing or sharing anything new.
 
 ### Shipping a new build
