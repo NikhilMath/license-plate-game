@@ -18,6 +18,11 @@ A guide for AI coding agents working in this repo. **Keep this file current:** w
 - Plates appear in one alphabetical grid (`USState.alphabetical`). Filter tabs are **Needed, Spotted, All**, and the screen opens on Needed. Tapping a spotted plate asks before removing it.
 - Several local players can share one phone. Each has a palette color, shown as dots on the plates they've spotted.
 - **Friend groups** sync players across phones through CloudKit (see below). Friends appear in the standings with a 👥 icon. They're view-only: no rename, delete, or "play as".
+- Two **game modes**, picked at the top of the Leaderboard tab (added 2026-11-10):
+  - **Competitive** (the default): everyone keeps their own list, and the leaderboard ranks players by plates spotted.
+  - **Co-op**: everyone fills one shared list. A plate is done once anyone spots it. The Plates tab shows team progress, the second tab is renamed **Team**, and players are listed by how many plates they spotted first. Tapping a plate a teammate already has shows who got it. Only the spotter can remove it.
+  - Switching modes never changes anyone's spotted plates. It only changes how they're counted.
+  - In a friend group the mode is shared. Any member can change it, the most recent change wins, and other phones follow on their next sync. Joining a group takes on that group's mode. Without a group it's a setting on that phone.
 - The Leaderboard's ⋯ menu has "New Road Trip", which clears every local player's plates.
 - Things tried and **removed at the owner's request**: a worldwide Game Center leaderboard (they want friends only) and region-grouped plates.
 
@@ -26,12 +31,12 @@ A guide for AI coding agents working in this repo. **Keep this file current:** w
 | File | Purpose |
 |---|---|
 | `LicensePlateGameApp.swift` | App entry. Wires in `GameStore` and `FriendSync`, runs a sync every 30s, uploads after player changes. Also `ContentView` (tabs) and `WelcomeView` (first-run name entry). |
-| `GameStore.swift` | `Player` model and the `@Observable` store: local `players`, `currentPlayerID`, `groupCode`, cached `friends`. Saved as JSON in Application Support (`game.json`). |
+| `GameStore.swift` | `Player` model and the `@Observable` store: local `players`, `currentPlayerID`, `groupCode`, cached `friends`, and the `GameMode` (`mode`, `modeChangedAt`) with the co-op team helpers. Saved as JSON in Application Support (`game.json`). |
 | `FriendSync.swift` | CloudKit public database sync: create, join, and leave groups, upload, and fetch. |
 | `USState.swift` | The 51 entries (50 states + DC) with nickname and region color. |
-| `PlatesView.swift` | Plates grid, progress header, filter, search, player switcher. |
+| `PlatesView.swift` | Plates grid, progress header (player or team), filter, search, player switcher. |
 | `LicensePlateCard.swift` | A single plate card. |
-| `LeaderboardView.swift` | Friend group section, standings, player detail. |
+| `LeaderboardView.swift` | Mode picker, friend group section, standings (or team progress in co-op), player detail. |
 
 The Xcode project uses a file-system-synchronized group (objectVersion 77), so new `.swift` files in that folder are picked up automatically. Don't add them to `project.pbxproj` by hand.
 
@@ -60,7 +65,8 @@ xcrun devicectl device process launch --terminate-existing --device 00008150-000
 
 ## CloudKit (friend groups)
 
-- Container `iCloud.com.nikhilmath.licenseplategame`, **public database**, record type `Member`. Each local player is one record named `<GROUPCODE>-<player UUID>`, with fields `groupCode`, `playerID`, `name`, `count`, `spotted` (a JSON string mapping state code to date).
+- Container `iCloud.com.nikhilmath.licenseplategame`, **public database**, record type `Member`. Each local player is one record named `<GROUPCODE>-<player UUID>`, with fields `groupCode`, `playerID`, `name`, `count`, `spotted` (a JSON string mapping state code to date), plus `mode` (String, `competitive` or `coop`) and `modeChangedAt` (Date/Time). A group's mode is the one with the latest `modeChangedAt` on any member's record. A phone that has never changed the mode leaves both fields off.
+- **`mode` and `modeChangedAt` are not in the Production schema yet** (as of 2026-11-10). Until they're deployed, changing the mode while in a group makes that phone's uploads fail. Deploy them before uploading a build with game modes.
 - A phone only writes its own records. Friends are found with a query on `groupCode`, which has a QUERYABLE index.
 - Group codes are 6 characters from `ABCDEFGHJKMNPQRSTUVWXYZ23456789`.
 - The schema was **deployed to Production on 2026-11-06**. If you add or change fields, the change lands in Development first. Deploy it in the CloudKit Console before shipping a TestFlight or App Store build, because those use Production.

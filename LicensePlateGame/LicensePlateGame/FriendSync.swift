@@ -4,7 +4,8 @@ import Observation
 /// Shares this phone's players with a friend group through CloudKit's public database.
 ///
 /// Each player on each phone is one `Member` record named `<group code>-<player id>`, so a phone
-/// only ever writes its own records. Friends are found by querying `groupCode`.
+/// only ever writes its own records. Friends are found by querying `groupCode`. Each record also
+/// carries the game mode and when it was changed; the latest change in the group wins.
 @MainActor
 @Observable
 final class FriendSync {
@@ -49,9 +50,14 @@ final class FriendSync {
                 error = "Sign in to iCloud in Settings to play with friends."
                 return
             }
-            if !isNew, try await fetchMembers(code).isEmpty {
-                error = "No group found with code \(code). Check the code, and make sure both phones have the TestFlight version."
-                return
+            if !isNew {
+                let group = try await fetchMembers(code)
+                if group.players.isEmpty {
+                    error = "No group found with code \(code). Check the code, and make sure both phones have the TestFlight version."
+                    return
+                }
+                // A joiner takes on the group's mode, whatever this phone was set to before.
+                if let mode = group.mode { store.setMode(mode.mode, changedAt: mode.changedAt) }
             }
             if let old = store.groupCode, old != code {
                 await deleteRecords(store.players.map(\.id), code: old)
@@ -90,6 +96,13 @@ final class FriendSync {
         }
     }
 
+    /// Call when the game mode changes, so the rest of the group picks it up.
+    func modeChanged() {
+        guard store.groupCode != nil else { return }
+        needsUpload = true
+        Task { await sync() }
+    }
+
     /// Saves any local changes, then downloads friends' latest plates.
     func sync() async {
         guard let code = store.groupCode else { return }
@@ -107,10 +120,13 @@ final class FriendSync {
     private func refresh() async {
         guard let code = store.groupCode else { return }
         do {
-            let members = try await fetchMembers(code)
+            let group = try await fetchMembers(code)
             guard store.groupCode == code else { return }
             let localIDs = Set(store.players.map(\.id))
-            store.setFriends(members.filter { !localIDs.contains($0.id) })
+            store.setFriends(group.players.filter { !localIDs.contains($0.id) })
+            if let mode = group.mode, mode.changedAt > store.modeChangedAt {
+                store.setMode(mode.mode, changedAt: mode.changedAt)
+            }
             lastSynced = Date()
             error = nil
         } catch {
@@ -135,10 +151,20 @@ final class FriendSync {
         _ = try? await database.modifyRecords(saving: [], deleting: ids.map { recordID(code, $0) })
     }
 
-    private func fetchMembers(_ code: String) async throws -> [Player] {
+    /// The group's players, plus its game mode: the most recently changed one on any member's record.
+    private func fetchMembers(_ code: String) async throws
+        -> (players: [Player], mode: (mode: GameMode, changedAt: Date)?) {
         let query = CKQuery(recordType: Self.recordType, predicate: NSPredicate(format: "groupCode == %@", code))
         let (results, _) = try await database.records(matching: query, resultsLimit: 200)
-        return results.compactMap { _, result in (try? result.get()).flatMap(Self.player(from:)) }
+        let records = results.compactMap { _, result in try? result.get() }
+        let mode = records
+            .compactMap { record -> (mode: GameMode, changedAt: Date)? in
+                guard let raw = record["mode"] as? String, let mode = GameMode(rawValue: raw),
+                      let changedAt = record["modeChangedAt"] as? Date else { return nil }
+                return (mode, changedAt)
+            }
+            .max { $0.changedAt < $1.changedAt }
+        return (records.compactMap(Self.player(from:)), mode)
     }
 
     // MARK: Records
@@ -154,6 +180,11 @@ final class FriendSync {
         record["name"] = player.name
         record["count"] = player.count
         record["spotted"] = (try? JSONEncoder().encode(player.spotted)).flatMap { String(data: $0, encoding: .utf8) }
+        // Builds before co-op don't write these, and a never-changed mode isn't worth sending.
+        if store.modeChangedAt > .distantPast {
+            record["mode"] = store.mode.rawValue
+            record["modeChangedAt"] = store.modeChangedAt
+        }
         return record
     }
 

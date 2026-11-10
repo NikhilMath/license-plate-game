@@ -11,14 +11,45 @@ struct LeaderboardView: View {
 
     var body: some View {
         NavigationStack {
+            let coop = store.mode == .coop
+            let scores = scores
             List {
+                Section {
+                    Picker("Mode", selection: Binding(get: { store.mode }, set: { store.setMode($0) })) {
+                        ForEach(GameMode.allCases) { Text($0.title).tag($0) }
+                    }
+                    .pickerStyle(.segmented)
+                } header: {
+                    Text("Mode")
+                } footer: {
+                    Text(modeFooter)
+                }
+
                 FriendGroupSection()
 
+                if coop {
+                    Section("Team Progress") {
+                        VStack(alignment: .leading, spacing: 6) {
+                            HStack(alignment: .firstTextBaseline) {
+                                Text("\(store.teamCount)")
+                                    .font(.largeTitle.bold().monospacedDigit())
+                                Text("of \(USState.all.count) plates")
+                                    .foregroundStyle(.secondary)
+                            }
+                            ProgressView(value: Double(store.teamCount), total: Double(USState.all.count))
+                                .tint(.green)
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+
                 Section {
-                    ForEach(Array(store.ranked.enumerated()), id: \.element.id) { index, player in
+                    ForEach(Array(scores.enumerated()), id: \.element.player.id) { index, entry in
+                        let player = entry.player
                         let isFriend = store.isFriend(player.id)
                         NavigationLink(value: player.id) {
-                            LeaderboardRow(rank: rank(of: player, at: index), player: player,
+                            LeaderboardRow(rank: coop ? nil : (scores.firstIndex { $0.score == entry.score } ?? index) + 1,
+                                           player: player, score: entry.score,
                                            isCurrent: player.id == store.currentPlayer?.id,
                                            isFriend: isFriend)
                         }
@@ -30,14 +61,15 @@ struct LeaderboardView: View {
                         }
                     }
                 } header: {
-                    Text("Standings")
+                    Text(coop ? "Found First" : "Standings")
                 } footer: {
-                    Text(store.groupCode == nil
-                         ? "Tap a player to see their plates. Swipe left to remove a player."
-                         : "Friends' plates update about every 30 seconds. Pull down to refresh.")
+                    Text((coop ? "Each plate counts for whoever spotted it first. " : "")
+                         + (store.groupCode == nil
+                            ? "Tap a player to see their plates. Swipe left to remove a player."
+                            : "Friends' plates update about every 30 seconds. Pull down to refresh."))
                 }
             }
-            .navigationTitle("Leaderboard")
+            .navigationTitle(coop ? "Team" : "Leaderboard")
             .refreshable { await friendSync.sync() }
             .navigationDestination(for: UUID.self) { id in
                 PlayerDetailView(playerID: id)
@@ -75,9 +107,21 @@ struct LeaderboardView: View {
         }
     }
 
-    /// Players tied on count share a rank.
-    private func rank(of player: Player, at index: Int) -> Int {
-        (store.ranked.firstIndex { $0.count == player.count } ?? index) + 1
+    /// Players with the number shown beside them, best first. Competitive: plates spotted.
+    /// Co-op: plates they were first on the team to spot.
+    private var scores: [(player: Player, score: Int)] {
+        guard store.mode == .coop else { return store.ranked.map { ($0, $0.count) } }
+        let firsts = Dictionary(grouping: store.firstSpotters.values, by: { $0 }).mapValues(\.count)
+        return store.ranked
+            .map { ($0, firsts[$0.id] ?? 0) }
+            .sorted { $0.1 > $1.1 }
+    }
+
+    private var modeFooter: String {
+        let scope = store.groupCode == nil ? "" : " Changing this changes it for your whole friend group."
+        return (store.mode == .coop
+                ? "Everyone works on one shared list. A plate is done as soon as anyone spots it."
+                : "Everyone keeps their own list. Whoever spots the most plates wins.") + scope
     }
 }
 
@@ -110,7 +154,7 @@ private struct FriendGroupSection: View {
                 status
                 Button("Leave Group", role: .destructive) { confirmingLeave = true }
             } else {
-                Text("Play against friends on their own phones. Create a group and text them the code, or join theirs.")
+                Text("Play with friends on their own phones, as a team or against each other. Create a group and text them the code, or join theirs.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                 HStack {
@@ -169,15 +213,21 @@ private struct FriendGroupSection: View {
 }
 
 private struct LeaderboardRow: View {
-    let rank: Int
+    /// Nil in co-op, where nobody is ranked.
+    let rank: Int?
     let player: Player
+    let score: Int
     let isCurrent: Bool
     let isFriend: Bool
 
     var body: some View {
         HStack(spacing: 14) {
-            rankBadge
-                .frame(width: 36)
+            if let rank {
+                rankBadge(rank)
+                    .frame(width: 36)
+            } else {
+                Circle().fill(player.color).frame(width: 12, height: 12)
+            }
 
             VStack(alignment: .leading, spacing: 6) {
                 HStack {
@@ -196,13 +246,13 @@ private struct LeaderboardRow: View {
                             .foregroundStyle(player.color)
                     }
                     Spacer()
-                    Text("\(player.count)")
+                    Text("\(score)")
                         .font(.title3.bold().monospacedDigit())
-                    + Text(" / \(USState.all.count)")
+                    + Text(rank == nil ? "" : " / \(USState.all.count)")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
-                ProgressView(value: Double(player.count), total: Double(USState.all.count))
+                ProgressView(value: Double(score), total: Double(USState.all.count))
                     .tint(player.color)
             }
         }
@@ -210,7 +260,7 @@ private struct LeaderboardRow: View {
     }
 
     @ViewBuilder
-    private var rankBadge: some View {
+    private func rankBadge(_ rank: Int) -> some View {
         switch rank {
         case 1:
             Image(systemName: "crown.fill").font(.title2).foregroundStyle(.yellow)

@@ -7,6 +7,7 @@
 - Add players, switch who's playing from the menu at the top right, and see who's ahead on the Leaderboard.
 - Colored dots on each plate show which players have spotted it.
 - **Friend groups:** on the Leaderboard, tap **Create Group** and text friends the 6-character code. They tap **Join with Code** on their phones. Everyone's plates sync through iCloud about every 30 seconds.
+- **Game modes:** at the top of the Leaderboard, pick **Competitive** (everyone has their own list, most plates wins) or **Co-op** (one shared list everyone fills together). A friend group shares one mode, and any member can change it.
 - "New Road Trip" (Leaderboard ⋯ menu) clears everyone's plates on this phone.
 
 ## Run it

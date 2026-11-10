@@ -16,6 +16,15 @@ struct Player: Identifiable, Codable, Hashable {
     static let palette: [Color] = [.blue, .orange, .green, .pink, .purple, .teal, .red, .indigo, .mint, .brown]
 }
 
+/// How plates are scored. Competitive: everyone has their own list and races for the most.
+/// Co-op: everyone fills one shared list together.
+enum GameMode: String, Codable, CaseIterable, Identifiable {
+    case competitive, coop
+
+    var id: Self { self }
+    var title: String { self == .coop ? "Co-op" : "Competitive" }
+}
+
 @Observable
 final class GameStore {
     var players: [Player] = [] {
@@ -30,6 +39,15 @@ final class GameStore {
     }
     /// Players on friends' phones, as last synced. Kept so the leaderboard works offline.
     private(set) var friends: [Player] = [] {
+        didSet { save() }
+    }
+
+    /// The game mode. In a friend group it's shared: the most recent change by any member wins.
+    private(set) var mode: GameMode = .competitive {
+        didSet { save() }
+    }
+    /// When `mode` was last changed, by this phone or a friend's.
+    private(set) var modeChangedAt: Date = .distantPast {
         didSet { save() }
     }
 
@@ -63,6 +81,40 @@ final class GameStore {
 
     func spotters(of state: USState) -> [Player] {
         everyone.filter { $0.hasSpotted(state) }
+    }
+
+    // MARK: Game mode
+
+    func setMode(_ newMode: GameMode, changedAt: Date = Date()) {
+        modeChangedAt = changedAt
+        if mode != newMode { mode = newMode }
+    }
+
+    /// Co-op: has anyone spotted this plate?
+    func teamHasSpotted(_ state: USState) -> Bool {
+        everyone.contains { $0.hasSpotted(state) }
+    }
+
+    /// Co-op: how many different plates the team has spotted.
+    var teamCount: Int {
+        USState.all.count { teamHasSpotted($0) }
+    }
+
+    /// Co-op credit: for each plate, the player who spotted it first.
+    var firstSpotters: [String: UUID] {
+        var best: [String: (id: UUID, date: Date)] = [:]
+        for player in everyone {
+            for (code, date) in player.spotted where USState.byCode[code] != nil {
+                if let current = best[code], current.date <= date { continue }
+                best[code] = (player.id, date)
+            }
+        }
+        return best.mapValues(\.id)
+    }
+
+    /// Whether this plate counts as spotted for `player` in the current mode.
+    func isSpotted(_ state: USState, for player: Player) -> Bool {
+        mode == .coop ? teamHasSpotted(state) : player.hasSpotted(state)
     }
 
     @discardableResult
@@ -116,6 +168,8 @@ final class GameStore {
         var currentPlayerID: UUID?
         var groupCode: String?
         var friends: [Player]?
+        var mode: GameMode?
+        var modeChangedAt: Date?
     }
 
     private var isLoading = false
@@ -128,13 +182,16 @@ final class GameStore {
         currentPlayerID = snapshot.currentPlayerID
         groupCode = snapshot.groupCode
         friends = snapshot.friends ?? []
+        mode = snapshot.mode ?? .competitive
+        modeChangedAt = snapshot.modeChangedAt ?? .distantPast
         isLoading = false
     }
 
     private func save() {
         guard !isLoading else { return }
         let snapshot = Snapshot(players: players, currentPlayerID: currentPlayerID,
-                                groupCode: groupCode, friends: friends)
+                                groupCode: groupCode, friends: friends,
+                                mode: mode, modeChangedAt: modeChangedAt)
         if let data = try? JSONEncoder().encode(snapshot) {
             try? data.write(to: fileURL, options: .atomic)
         }

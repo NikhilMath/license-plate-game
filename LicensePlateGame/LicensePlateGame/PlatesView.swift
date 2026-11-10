@@ -13,6 +13,8 @@ struct PlatesView: View {
     @State private var pendingRemoval: USState?
     @State private var spotCount = 0
     @State private var showCompleted = false
+    /// Co-op: who already has the plate that was just tapped.
+    @State private var alreadySpotted: String?
 
     private let columns = [GridItem(.adaptive(minimum: 105), spacing: 14)]
 
@@ -20,8 +22,16 @@ struct PlatesView: View {
         NavigationStack {
             ScrollView {
                 if let player = store.currentPlayer {
-                    ProgressHeader(player: player)
-                        .padding(.horizontal)
+                    Group {
+                        if store.mode == .coop {
+                            ProgressHeader(title: "Team", count: store.teamCount, color: .green,
+                                           noun: "plates spotted together")
+                        } else {
+                            ProgressHeader(title: player.name, count: player.count, color: player.color,
+                                           noun: "plates spotted")
+                        }
+                    }
+                    .padding(.horizontal)
 
                     Picker("Filter", selection: $filter) {
                         ForEach(Filter.allCases) { Text($0.rawValue).tag($0) }
@@ -63,25 +73,38 @@ struct PlatesView: View {
             } message: {
                 Text("This takes it off \(store.currentPlayer?.name ?? "this player")'s list.")
             }
+            .alert("Already spotted", isPresented: Binding(get: { alreadySpotted != nil },
+                                                           set: { if !$0 { alreadySpotted = nil } })) {
+                Button("OK") {}
+            } message: {
+                Text(alreadySpotted ?? "")
+            }
             .alert("All 51 plates!", isPresented: $showCompleted) {
                 Button("Woo!") {}
             } message: {
-                Text("\(store.currentPlayer?.name ?? "You") spotted every state and DC.")
+                Text(store.mode == .coop
+                     ? "The team spotted every state and DC."
+                     : "\(store.currentPlayer?.name ?? "You") spotted every state and DC.")
             }
         }
     }
 
     private func plateButton(_ state: USState, player: Player) -> some View {
-        let spotted = player.hasSpotted(state)
+        let spotted = store.isSpotted(state, for: player)
         return Button {
-            if spotted {
+            if player.hasSpotted(state) {
                 pendingRemoval = state
+            } else if spotted {
+                // Co-op, and a teammate has it. Only they can take it back.
+                let names = store.spotters(of: state).map(\.name).formatted(.list(type: .and))
+                alreadySpotted = "\(names) spotted \(state.name) for the team."
             } else {
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
                     store.setSpotted(state, true, for: player)
                 }
                 spotCount += 1
-                if store.currentPlayer?.count == USState.all.count { showCompleted = true }
+                let count = store.mode == .coop ? store.teamCount : store.currentPlayer?.count
+                if count == USState.all.count { showCompleted = true }
             }
         } label: {
             LicensePlateCard(state: state, spotted: spotted, spotters: store.spotters(of: state))
@@ -94,8 +117,8 @@ struct PlatesView: View {
         return USState.alphabetical.filter { state in
             switch filter {
             case .all: break
-            case .needed: if player.hasSpotted(state) { return false }
-            case .spotted: if !player.hasSpotted(state) { return false }
+            case .needed: if store.isSpotted(state, for: player) { return false }
+            case .spotted: if !store.isSpotted(state, for: player) { return false }
             }
             return query.isEmpty
                 || state.name.localizedCaseInsensitiveContains(query)
@@ -110,37 +133,40 @@ struct PlatesView: View {
 }
 
 private struct ProgressHeader: View {
-    let player: Player
+    let title: String
+    let count: Int
+    let color: Color
+    let noun: String
 
     var body: some View {
         let total = USState.all.count
         HStack(spacing: 16) {
             ZStack {
-                Circle().stroke(player.color.opacity(0.2), lineWidth: 8)
+                Circle().stroke(color.opacity(0.2), lineWidth: 8)
                 Circle()
-                    .trim(from: 0, to: CGFloat(player.count) / CGFloat(total))
-                    .stroke(player.color, style: StrokeStyle(lineWidth: 8, lineCap: .round))
+                    .trim(from: 0, to: CGFloat(count) / CGFloat(total))
+                    .stroke(color, style: StrokeStyle(lineWidth: 8, lineCap: .round))
                     .rotationEffect(.degrees(-90))
-                Text("\(player.count)")
+                Text("\(count)")
                     .font(.title2.bold().monospacedDigit())
                     .contentTransition(.numericText())
             }
             .frame(width: 64, height: 64)
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(player.name)
+                Text(title)
                     .font(.title3.bold())
-                Text("\(player.count) of \(total) plates spotted")
+                Text("\(count) of \(total) \(noun)")
                     .foregroundStyle(.secondary)
-                Text("\(total - player.count) to go")
+                Text("\(total - count) to go")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
             Spacer()
         }
         .padding()
-        .background(player.color.opacity(0.1), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .animation(.snappy, value: player.count)
+        .background(color.opacity(0.1), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .animation(.snappy, value: count)
     }
 }
 

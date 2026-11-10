@@ -19,6 +19,7 @@ struct LicensePlateGameApp: App {
                 .onChange(of: store.players) { old, new in
                     friendSync.playersChanged(from: old, to: new)
                 }
+                .onChange(of: store.mode) { friendSync.modeChanged() }
                 .task(id: store.groupCode) {
                     while !Task.isCancelled {
                         await friendSync.sync()
@@ -40,7 +41,11 @@ struct ContentView: View {
                 PlatesView()
                     .tabItem { Label("Plates", systemImage: "car.fill") }
                 LeaderboardView()
-                    .tabItem { Label("Leaderboard", systemImage: "trophy.fill") }
+                    .tabItem {
+                        store.mode == .coop
+                            ? Label("Team", systemImage: "person.3.fill")
+                            : Label("Leaderboard", systemImage: "trophy.fill")
+                    }
             }
         }
     }
@@ -59,7 +64,7 @@ struct WelcomeView: View {
                 .rotationEffect(.degrees(-6))
             Text("Plate Chase")
                 .font(.largeTitle.bold())
-            Text("Spot license plates from all 50 states and DC. Whoever spots the most wins the road trip.")
+            Text("Spot license plates from all 50 states and DC. Race your friends for the most, or team up to find them all.")
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
             TextField("Your name", text: $name)
