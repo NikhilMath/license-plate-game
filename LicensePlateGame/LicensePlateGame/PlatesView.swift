@@ -25,7 +25,7 @@ struct PlatesView: View {
                     Group {
                         if store.mode == .coop {
                             ProgressHeader(title: "Team", count: store.teamCount, color: .green,
-                                           noun: "plates spotted together")
+                                           noun: "plates spotted")
                         } else {
                             ProgressHeader(title: player.name, count: player.count, color: player.color,
                                            noun: "plates spotted")

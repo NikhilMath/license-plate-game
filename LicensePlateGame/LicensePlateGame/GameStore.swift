@@ -85,7 +85,15 @@ final class GameStore {
 
     // MARK: Game mode
 
-    func setMode(_ newMode: GameMode, changedAt: Date = Date()) {
+    /// The player picked a mode. Stamped later than the change it replaces, even if a friend's
+    /// clock runs ahead of this phone's, so the group doesn't flip it straight back.
+    func chooseMode(_ newMode: GameMode) {
+        guard newMode != mode else { return }
+        setMode(newMode, changedAt: max(Date(), modeChangedAt.addingTimeInterval(1)))
+    }
+
+    /// Sets the mode with a known change time, as synced from a friend group.
+    func setMode(_ newMode: GameMode, changedAt: Date) {
         modeChangedAt = changedAt
         if mode != newMode { mode = newMode }
     }

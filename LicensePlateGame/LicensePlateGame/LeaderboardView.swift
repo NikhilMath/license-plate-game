@@ -15,7 +15,7 @@ struct LeaderboardView: View {
             let scores = scores
             List {
                 Section {
-                    Picker("Mode", selection: Binding(get: { store.mode }, set: { store.setMode($0) })) {
+                    Picker("Mode", selection: Binding(get: { store.mode }, set: { store.chooseMode($0) })) {
                         ForEach(GameMode.allCases) { Text($0.title).tag($0) }
                     }
                     .pickerStyle(.segmented)

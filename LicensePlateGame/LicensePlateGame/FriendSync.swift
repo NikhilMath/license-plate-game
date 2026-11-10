@@ -57,7 +57,8 @@ final class FriendSync {
                     return
                 }
                 // A joiner takes on the group's mode, whatever this phone was set to before.
-                if let mode = group.mode { store.setMode(mode.mode, changedAt: mode.changedAt) }
+                // A group nobody has changed is competitive.
+                store.setMode(group.mode?.mode ?? .competitive, changedAt: group.mode?.changedAt ?? .distantPast)
             }
             if let old = store.groupCode, old != code {
                 await deleteRecords(store.players.map(\.id), code: old)
@@ -126,6 +127,8 @@ final class FriendSync {
             store.setFriends(group.players.filter { !localIDs.contains($0.id) })
             if let mode = group.mode, mode.changedAt > store.modeChangedAt {
                 store.setMode(mode.mode, changedAt: mode.changedAt)
+                // Copy it onto this phone's records, so it survives the friend who set it leaving.
+                needsUpload = true
             }
             lastSynced = Date()
             error = nil
