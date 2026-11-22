@@ -19,8 +19,7 @@ struct LicensePlateGameApp: App {
                 .onChange(of: store.players) { old, new in
                     friendSync.playersChanged(from: old, to: new)
                 }
-                .onChange(of: store.mode) { friendSync.modeChanged() }
-                .task(id: store.groupCode) {
+                .task(id: store.groups.map(\.code)) {
                     while !Task.isCancelled {
                         await friendSync.sync()
                         try? await Task.sleep(for: .seconds(30))

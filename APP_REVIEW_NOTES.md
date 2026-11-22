@@ -37,6 +37,15 @@ Not applicable. The plate cards are original designs: a state's abbreviation, na
 Contact: Nikhil Math, nikhil@nikhilmath.com
 ```
 
+## What's New in 1.2 (draft, not yet submitted)
+
+Put this above the 1.1 text in the Notes field when version 1.2 is submitted, and update the HOW TO USE IT steps to match (Add Group instead of the Create Group / Join with Code buttons once you're in a group, and long-press instead of swipe to remove a player).
+
+```text
+WHAT'S NEW IN 1.2
+A phone can now be in more than one friend group. The Leaderboard starts with a row of cards: This Phone, each group, and Add Group (Create Group or Join with Code). The selected card picks whose standings are shown and which group the Plates tab plays with. Each group keeps its own game mode. Competitive standings show the top three on a podium. Group names are stored only on the device. No new data is collected or shared, and friend groups still use the same CloudKit records as 1.0 and 1.1.
+```
+
 ## Screen recording checklist
 
 Apple requires a recording from a **physical iPhone** on the **latest iOS**, starting with the app launch.

@@ -18,11 +18,18 @@ A guide for AI coding agents working in this repo. **Keep this file current:** w
 - Plates appear in one alphabetical grid (`USState.alphabetical`). Filter tabs are **Needed, Spotted, All**, and the screen opens on Needed. Tapping a spotted plate asks before removing it.
 - Several local players can share one phone. Each has a palette color, shown as dots on the plates they've spotted.
 - **Friend groups** sync players across phones through CloudKit (see below). Friends appear in the standings with a 👥 icon. They're view-only: no rename, delete, or "play as".
-- Two **game modes**, picked at the top of the Leaderboard tab (added 2026-11-10):
+- **Several groups at once** (added 2026-11-21, version 1.2). A phone can be in any number of groups. This phone's players, and their plates, count in every group they're in.
+  - The Leaderboard opens with a horizontal carousel of cards: **This Phone**, then each group, then **Add Group** (Create Group or Join with Code). Each card shows the members' avatars and either "You're 2nd of 5" or "32 of 51 found".
+  - The selected card is the **active group**. The Leaderboard shows its standings, and the Plates tab uses its mode and its friends' dots. The Plates header names it ("21 to go · Family").
+  - Below the carousel is a gradient card for the active group: name, members, sync status, code (tap to copy), Invite, the ⋯ menu (Rename, Copy Code, Leave Group), and the mode switch.
+  - Competitive standings show the top three on a **podium**, with everyone else in rows below. Co-op shows a team progress ring and a bar colored by who found each plate first.
+  - Group names are set per phone and aren't synced. An unnamed group shows its friends' names ("Grayson & Sam").
+  - Removing a player is a long-press on them, or the button at the bottom of their page. There is no swipe-to-delete any more.
+- Two **game modes**, picked on the active group's card on the Leaderboard tab (added 2026-11-10):
   - **Competitive** (the default): everyone keeps their own list, and the leaderboard ranks players by plates spotted.
   - **Co-op**: everyone fills one shared list. A plate is done once anyone spots it. The Plates tab shows team progress, the second tab is renamed **Team**, and players are listed by how many plates they spotted first. Tapping a plate a teammate already has shows who got it. Only the spotter can remove it.
   - Switching modes never changes anyone's spotted plates. It only changes how they're counted.
-  - In a friend group the mode is shared. Any member can change it, the most recent change wins, and other phones follow on their next sync. Joining a group takes on that group's mode. Without a group it's a setting on that phone.
+  - Each group has its own mode, shared by its members. Any member can change it, the most recent change wins, and other phones follow on their next sync. Joining a group takes on that group's mode. A new group starts in the mode on screen when it's created. This Phone has its own mode.
 - The Leaderboard's ⋯ menu has "New Road Trip", which clears every local player's plates.
 - Things tried and **removed at the owner's request**: a worldwide Game Center leaderboard (they want friends only) and region-grouped plates.
 
@@ -31,12 +38,13 @@ A guide for AI coding agents working in this repo. **Keep this file current:** w
 | File | Purpose |
 |---|---|
 | `LicensePlateGameApp.swift` | App entry. Wires in `GameStore` and `FriendSync`, runs a sync every 30s, uploads after player changes. Also `ContentView` (tabs) and `WelcomeView` (first-run name entry). |
-| `GameStore.swift` | `Player` model and the `@Observable` store: local `players`, `currentPlayerID`, `groupCode`, cached `friends`, and the `GameMode` (`mode`, `modeChangedAt`) with the co-op team helpers. Saved as JSON in Application Support (`game.json`). |
-| `FriendSync.swift` | CloudKit public database sync: create, join, and leave groups, upload, and fetch. |
+| `GameStore.swift` | `Player`, `FriendGroup` (code, local name, color, cached friends, mode), `Board` (standings and co-op helpers for one group or this phone), and the `@Observable` store: `players`, `currentPlayerID`, `groups`, `activeGroupCode`, and the This Phone mode. Saved as JSON in Application Support (`game.json`). Files saved by 1.1 (one `groupCode`) are migrated into one group on load. |
+| `FriendSync.swift` | CloudKit public database sync for every group: create, join, and leave groups, upload, and fetch. |
 | `USState.swift` | The 51 entries (50 states + DC) with nickname and region color. |
 | `PlatesView.swift` | Plates grid, progress header (player or team), filter, search, player switcher. |
 | `LicensePlateCard.swift` | A single plate card. |
-| `LeaderboardView.swift` | Mode picker, friend group section, standings (or team progress in co-op), player detail. |
+| `LeaderboardView.swift` | The Leaderboard screen: podium, team progress card, standings rows, the group alerts, and the player detail page. |
+| `GroupViews.swift` | Group carousel, the active group's card, mode switch, and shared pieces (`PlayerAvatar`, `AvatarStack`, `ScoreBar`). |
 
 The Xcode project uses a file-system-synchronized group (objectVersion 77), so new `.swift` files in that folder are picked up automatically. Don't add them to `project.pbxproj` by hand.
 
@@ -65,9 +73,10 @@ xcrun devicectl device process launch --terminate-existing --device 00008150-000
 
 ## CloudKit (friend groups)
 
-- Container `iCloud.com.nikhilmath.licenseplategame`, **public database**, record type `Member`. Each local player is one record named `<GROUPCODE>-<player UUID>`, with fields `groupCode`, `playerID`, `name`, `count`, `spotted` (a JSON string mapping state code to date), plus `mode` (String, `competitive` or `coop`) and `modeChangedAt` (Date/Time). A group's mode is the one with the latest `modeChangedAt` on any member's record. A phone that has never changed the mode leaves both fields off.
+- Container `iCloud.com.nikhilmath.licenseplategame`, **public database**, record type `Member`. Each local player has one record per group, named `<GROUPCODE>-<player UUID>`, with fields `groupCode`, `playerID`, `name`, `count`, `spotted` (a JSON string mapping state code to date), plus `mode` (String, `competitive` or `coop`) and `modeChangedAt` (Date/Time). A group's mode is the one with the latest `modeChangedAt` on any member's record. A phone that has never changed the mode leaves both fields off.
 - `mode` and `modeChangedAt` were added in the CloudKit Console and **deployed to Production on 2026-11-10**. Neither has an index, and neither needs one.
-- A phone only writes its own records. Friends are found with a query on `groupCode`, which has a QUERYABLE index.
+- A phone only writes its own records. Friends are found with a query on `groupCode`, which has a QUERYABLE index. Each sync saves every local player to every group in one request, then queries each group. Friends still download when the upload fails, because reading the public database doesn't need an iCloud account.
+- Multiple groups (1.2) needed **no schema change**. Group names stay on the phone.
 - Group codes are 6 characters from `ABCDEFGHJKMNPQRSTUVWXYZ23456789`.
 - The schema was **deployed to Production on 2026-11-06**. If you add or change fields, the change lands in Development first. Deploy it in the CloudKit Console before shipping a TestFlight or App Store build, because those use Production.
 - **Every build uses Production**, including Debug builds from Xcode. The entitlements file sets `com.apple.developer.icloud-container-environment = Production`. This was added on 2026-11-06 after a Debug build couldn't join a group made in TestFlight, because Development and Production data are separate.
@@ -93,6 +102,7 @@ xcrun devicectl device process launch --terminate-existing --device 00008150-000
 - By 2026-11-10 App Store Connect was treating **1.0 as approved**: an upload of another 1.0 build was refused with "must contain a higher version than that of the previously approved version [1.0]". Check the app's page in App Store Connect for whether it is live.
 - Version **1.0** is live (Ready for Distribution).
 - Version **1.1** was set up on 2026-11-10 and is in **Prepare for Submission** with build 1.1 (1) attached. Its What's New text, promotional text, and description cover the game modes, and the review notes start with a "What's New in 1.1" section (also in `APP_REVIEW_NOTES.md`). The owner approved submitting it, and it was **submitted for App Store review on 2026-11-10** (status: Waiting for Review). It is set to release automatically to all users as soon as App Review approves it.
+- Build **1.2** was uploaded on 2026-11-21 (App Store Connect assigns the build number) with multiple groups and the redesigned Leaderboard. `MARKETING_VERSION` is 1.2 because 1.1 was already submitted. It goes to **Me** automatically. It is not yet added to **Friends**, and no 1.2 version has been set up or submitted in App Store Connect. The "What's New in 1.2" review-notes text is in `APP_REVIEW_NOTES.md`. When 1.2 is released, update the friend-group steps on the support page (`docs/index.html`), which still describe one group.
 - The App Store screenshots still show 1.0, without the mode picker. They're optional to refresh, since every 1.0 screen still looks the same in Competitive mode.
 - Listing: support page `docs/index.html`, privacy policy `docs/privacy.html` (GitHub Pages from `main`), screenshots in `docs/screenshots/` at 1206 × 2622. Sold in the US only, free. Update the privacy policy and the review notes if the app starts storing or sharing anything new.
 

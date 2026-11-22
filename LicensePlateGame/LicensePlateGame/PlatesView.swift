@@ -22,13 +22,14 @@ struct PlatesView: View {
         NavigationStack {
             ScrollView {
                 if let player = store.currentPlayer {
+                    let groupName = store.activeGroup.map { store.displayName(of: $0) }
                     Group {
                         if store.mode == .coop {
                             ProgressHeader(title: "Team", count: store.teamCount, color: .green,
-                                           noun: "plates spotted")
+                                           noun: "plates spotted", groupName: groupName)
                         } else {
                             ProgressHeader(title: player.name, count: player.count, color: player.color,
-                                           noun: "plates spotted")
+                                           noun: "plates spotted", groupName: groupName)
                         }
                     }
                     .padding(.horizontal)
@@ -137,6 +138,8 @@ private struct ProgressHeader: View {
     let count: Int
     let color: Color
     let noun: String
+    /// The active friend group, whose players show as dots on the plates.
+    let groupName: String?
 
     var body: some View {
         let total = USState.all.count
@@ -158,9 +161,11 @@ private struct ProgressHeader: View {
                     .font(.title3.bold())
                 Text("\(count) of \(total) \(noun)")
                     .foregroundStyle(.secondary)
-                Text("\(total - count) to go")
+                (Text("\(total - count) to go")
+                 + (groupName.map { Text("  ·  ") + Text(Image(systemName: "person.2.fill")) + Text(" \($0)") } ?? Text("")))
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                    .lineLimit(1)
             }
             Spacer()
         }
