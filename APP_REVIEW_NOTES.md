@@ -4,11 +4,11 @@ On 2026-11-07, App Review sent back version 1.0 (build 1.0 (2)) under **Guidelin
 
 ## Notes field (paste as is)
 
-This is the text saved in App Store Connect for version 1.1 on 2026-11-10 (the 1.0 text plus the "What's New in 1.1" section). Keep it under the 4,000-character limit. If a later recording leaves out a step listed in section 1, remove that step from the text. For a new recording, update the first line to say where the video is.
+This is the text saved in App Store Connect for version 1.2 on 2026-11-21. It is the 1.0 text with a "What's New in 1.2" section in place of 1.1's, and updated steps for removing players (long press instead of swipe) and joining groups (Join, or Add Group then Join with Code). Keep it under the 4,000-character limit (this is about 3,700). If a later recording leaves out a step listed in section 1, remove that step from the text. For a new recording, update the first line to say where the video is.
 
 ```text
-WHAT'S NEW IN 1.1
-A game mode picker at the top of the Leaderboard tab. Competitive (the default) works exactly as in 1.0. Co-op makes everyone share one list: a plate counts once anyone spots it, the second tab becomes Team, and players are listed by how many plates they found first. In a friend group the mode is shared through the same CloudKit records. No new data is collected or shared. The recording below shows 1.0; every flow in it is unchanged in Competitive mode.
+WHAT'S NEW IN 1.2
+A device can now be in more than one friend group. The Leaderboard starts with a row of cards: This Phone, each group, and Add Group (Create Group or Join with Code). The selected card picks whose standings are shown and which group the Plates tab plays with. Each group keeps its own Competitive or Co-op mode (added in 1.1). Competitive standings show the top three on a podium. Group names are stored only on the device. No new data is collected or shared; friend groups use the same CloudKit records as 1.0 and 1.1. The recording below shows 1.0. Its flows still work, except that players are now removed with a long press instead of a swipe.
 
 1. SCREEN RECORDING
 Attached to our Nov 7 reply in the App Review messages (ScreenRecording_11-07-2026 22-47-43_1.MP4). Recorded on an iPhone running the latest iOS, using build 1.0 (2). It starts at app launch and shows: entering a name on the welcome screen, spotting plates and removing one, the Needed / Spotted / All filter and search, adding a second player and switching between players, the Leaderboard and a player's detail page, creating a friend group, a second iPhone joining with the group code and showing up on the leaderboard, leaving the group, and New Road Trip.
@@ -22,8 +22,8 @@ Plate Chase is the road trip license plate game for families and friends of all 
 No login, demo account, or sample files are needed.
 - Launch the app, type any name, and tap Start Playing.
 - Plates tab: tap a plate to mark it spotted. Tap a spotted plate to remove it (the app asks first). Use Needed / Spotted / All to filter, or search by state. The player menu at the top switches who is playing.
-- Leaderboard tab: the person+ button adds a player. Tap a player to see their plates. Swipe left to remove a player. The ... menu has New Road Trip, which clears every plate.
-- Friend groups (optional; the device must be signed in to iCloud): on the Leaderboard, tap Create Group to get a 6-character code. On a second device, tap Join with Code and enter it. Each phone's players appear on the other's leaderboard within about 30 seconds, or pull down to refresh. Without iCloud, the app says so and everything else works normally.
+- Leaderboard tab: the person+ button adds a player. Tap a player to see their plates. Touch and hold a player, or use the button at the bottom of their page, to remove them. The ... menu has New Road Trip, which clears every plate.
+- Friend groups (optional; the device must be signed in to iCloud): on the Leaderboard, tap Create Group to get a 6-character code. On a second device, tap Join (or Add Group, then Join with Code) and enter it. Each phone's players appear on the other's leaderboard within about 30 seconds, or pull down to refresh. Without iCloud, the app says so and everything else works normally.
 
 4. EXTERNAL SERVICES
 Apple CloudKit (the public database in the app's own iCloud container) stores friend group members and their spotted plates. It is the only external service. There are no third-party SDKs, analytics, ads, sign-in services, payment processors, or AI services. Everything else is stored only on the device.
@@ -35,15 +35,6 @@ None. The app works the same everywhere. It is offered in the United States only
 Not applicable. The plate cards are original designs: a state's abbreviation, name, and nickname on a color band for its region. They don't reproduce any state's license plate artwork, seals, or logos.
 
 Contact: Nikhil Math, nikhil@nikhilmath.com
-```
-
-## What's New in 1.2 (draft, not yet submitted)
-
-Put this above the 1.1 text in the Notes field when version 1.2 is submitted, and update the HOW TO USE IT steps to match (Add Group instead of the Create Group / Join with Code buttons once you're in a group, and long-press instead of swipe to remove a player).
-
-```text
-WHAT'S NEW IN 1.2
-A phone can now be in more than one friend group. The Leaderboard starts with a row of cards: This Phone, each group, and Add Group (Create Group or Join with Code). The selected card picks whose standings are shown and which group the Plates tab plays with. Each group keeps its own game mode. Competitive standings show the top three on a podium. Group names are stored only on the device. No new data is collected or shared, and friend groups still use the same CloudKit records as 1.0 and 1.1.
 ```
 
 ## Screen recording checklist
