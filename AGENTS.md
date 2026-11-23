@@ -45,6 +45,7 @@ A guide for AI coding agents working in this repo. **Keep this file current:** w
 | `LicensePlateCard.swift` | A single plate card. |
 | `LeaderboardView.swift` | The Leaderboard screen: podium, team progress card, standings rows, the group alerts, and the player detail page. |
 | `GroupViews.swift` | Group carousel, the active group's card, mode switch, and shared pieces (`PlayerAvatar`, `AvatarStack`, `ScoreBar`). |
+| `DemoData.swift` | Debug builds only. With the `-DemoMode` launch argument the app starts from made-up players (Maya, Leo, Dad) and two friend groups ("Family", "Road Trip Crew"), saves to `demo.json` instead of `game.json`, and `FriendSync` never contacts CloudKit. Used for screen recordings. |
 
 The Xcode project uses a file-system-synchronized group (objectVersion 77), so new `.swift` files in that folder are picked up automatically. Don't add them to `project.pbxproj` by hand.
 
@@ -63,6 +64,14 @@ xcrun devicectl device process launch --terminate-existing --device 00008150-000
 ```
 
 `build/` is gitignored.
+
+To run in demo mode in the simulator: `xcrun simctl launch --terminate-running-process booted com.nikhilmath.licenseplategame -DemoMode`.
+
+## Demo video
+
+`marketing/demo-video/` holds the 45-second LinkedIn and TikTok video, made on 2026-11-23: a Remotion project, its script, the Ava voiceover (`edge-tts`), and an XCUITest recorder (`recorder/`) that taps through the app in demo mode while `simctl` records. Its README has the script, the shot list, and how to make it again. The footage and rendered video are gitignored. The owner's copy is `~/Downloads/plate-chase-demo.mp4`. It shows the 1.2 screens (group cards, podium), so it fits once 1.2 is live.
+
+The demo mode was committed without uploading a build, because Release builds don't include it.
 
 ## Signing and identifiers
 

@@ -1,0 +1,851 @@
+{
+  "sections": [
+    {
+      "id": "hook",
+      "file": "voice/hook.mp3",
+      "duration": 3.264,
+      "words": [
+        {
+          "word": "Ever",
+          "start": 0.083,
+          "end": 0.345,
+          "text": "Ever"
+        },
+        {
+          "word": "fought",
+          "start": 0.345,
+          "end": 0.738,
+          "text": "fought"
+        },
+        {
+          "word": "over",
+          "start": 0.75,
+          "end": 0.964,
+          "text": "over"
+        },
+        {
+          "word": "who",
+          "start": 0.976,
+          "end": 1.071,
+          "text": "who"
+        },
+        {
+          "word": "spotted",
+          "start": 1.083,
+          "end": 1.595,
+          "text": "spotted"
+        },
+        {
+          "word": "that",
+          "start": 1.607,
+          "end": 1.809,
+          "text": "that"
+        },
+        {
+          "word": "Vermont",
+          "start": 1.821,
+          "end": 2.155,
+          "text": "Vermont"
+        },
+        {
+          "word": "plate",
+          "start": 2.155,
+          "end": 2.381,
+          "text": "plate"
+        },
+        {
+          "word": "first",
+          "start": 2.393,
+          "end": 2.905,
+          "text": "first?"
+        }
+      ]
+    },
+    {
+      "id": "intro",
+      "file": "voice/intro.mp3",
+      "duration": 8.424,
+      "words": [
+        {
+          "word": "Plate",
+          "start": 0.083,
+          "end": 0.298,
+          "text": "Plate"
+        },
+        {
+          "word": "Chase",
+          "start": 0.298,
+          "end": 0.679,
+          "text": "Chase"
+        },
+        {
+          "word": "is",
+          "start": 0.75,
+          "end": 0.869,
+          "text": "is"
+        },
+        {
+          "word": "a",
+          "start": 0.881,
+          "end": 0.964,
+          "text": "a"
+        },
+        {
+          "word": "free",
+          "start": 0.976,
+          "end": 1.31,
+          "text": "free"
+        },
+        {
+          "word": "iPhone",
+          "start": 1.321,
+          "end": 1.69,
+          "text": "iPhone"
+        },
+        {
+          "word": "game",
+          "start": 1.702,
+          "end": 1.964,
+          "text": "game"
+        },
+        {
+          "word": "for",
+          "start": 1.976,
+          "end": 2.119,
+          "text": "for"
+        },
+        {
+          "word": "road",
+          "start": 2.131,
+          "end": 2.31,
+          "text": "road"
+        },
+        {
+          "word": "trips",
+          "start": 2.31,
+          "end": 2.762,
+          "text": "trips."
+        },
+        {
+          "word": "Spot",
+          "start": 3.119,
+          "end": 3.429,
+          "text": "Spot"
+        },
+        {
+          "word": "license",
+          "start": 3.44,
+          "end": 3.809,
+          "text": "license"
+        },
+        {
+          "word": "plates",
+          "start": 3.821,
+          "end": 4.167,
+          "text": "plates"
+        },
+        {
+          "word": "from",
+          "start": 4.179,
+          "end": 4.369,
+          "text": "from"
+        },
+        {
+          "word": "all",
+          "start": 4.512,
+          "end": 4.702,
+          "text": "all"
+        },
+        {
+          "word": "fifty",
+          "start": 4.714,
+          "end": 5.012,
+          "text": "50"
+        },
+        {
+          "word": "states",
+          "start": 5.024,
+          "end": 5.429,
+          "text": "states"
+        },
+        {
+          "word": "and",
+          "start": 5.44,
+          "end": 5.619,
+          "text": "and"
+        },
+        {
+          "word": "D.C.",
+          "start": 5.631,
+          "end": 6.143,
+          "text": "DC,"
+        },
+        {
+          "word": "with",
+          "start": 6.583,
+          "end": 6.738,
+          "text": "with"
+        },
+        {
+          "word": "family",
+          "start": 6.75,
+          "end": 7.286,
+          "text": "family"
+        },
+        {
+          "word": "or",
+          "start": 7.298,
+          "end": 7.476,
+          "text": "or"
+        },
+        {
+          "word": "friends",
+          "start": 7.488,
+          "end": 8.071,
+          "text": "friends."
+        }
+      ]
+    },
+    {
+      "id": "spot",
+      "file": "voice/spot.mp3",
+      "duration": 8.376,
+      "words": [
+        {
+          "word": "See",
+          "start": 0.083,
+          "end": 0.262,
+          "text": "See"
+        },
+        {
+          "word": "a",
+          "start": 0.274,
+          "end": 0.333,
+          "text": "a"
+        },
+        {
+          "word": "plate",
+          "start": 0.345,
+          "end": 0.798,
+          "text": "plate?"
+        },
+        {
+          "word": "Tap",
+          "start": 1.155,
+          "end": 1.417,
+          "text": "Tap"
+        },
+        {
+          "word": "it",
+          "start": 1.417,
+          "end": 1.643,
+          "text": "it."
+        },
+        {
+          "word": "Every",
+          "start": 2.036,
+          "end": 2.274,
+          "text": "Every"
+        },
+        {
+          "word": "state",
+          "start": 2.286,
+          "end": 2.595,
+          "text": "state"
+        },
+        {
+          "word": "has",
+          "start": 2.607,
+          "end": 2.786,
+          "text": "has"
+        },
+        {
+          "word": "its",
+          "start": 2.798,
+          "end": 2.893,
+          "text": "its"
+        },
+        {
+          "word": "own",
+          "start": 2.905,
+          "end": 3.095,
+          "text": "own"
+        },
+        {
+          "word": "plate",
+          "start": 3.107,
+          "end": 3.488,
+          "text": "plate,"
+        },
+        {
+          "word": "and",
+          "start": 3.738,
+          "end": 3.929,
+          "text": "and"
+        },
+        {
+          "word": "your",
+          "start": 3.94,
+          "end": 4.119,
+          "text": "your"
+        },
+        {
+          "word": "ring",
+          "start": 4.131,
+          "end": 4.321,
+          "text": "ring"
+        },
+        {
+          "word": "fills",
+          "start": 4.333,
+          "end": 4.595,
+          "text": "fills"
+        },
+        {
+          "word": "up",
+          "start": 4.595,
+          "end": 4.726,
+          "text": "up"
+        },
+        {
+          "word": "as",
+          "start": 4.726,
+          "end": 4.821,
+          "text": "as"
+        },
+        {
+          "word": "you",
+          "start": 4.833,
+          "end": 4.917,
+          "text": "you"
+        },
+        {
+          "word": "go",
+          "start": 4.929,
+          "end": 5.286,
+          "text": "go."
+        },
+        {
+          "word": "Filter",
+          "start": 5.702,
+          "end": 6.024,
+          "text": "Filter"
+        },
+        {
+          "word": "by",
+          "start": 6.036,
+          "end": 6.155,
+          "text": "by"
+        },
+        {
+          "word": "what",
+          "start": 6.167,
+          "end": 6.298,
+          "text": "what"
+        },
+        {
+          "word": "you",
+          "start": 6.298,
+          "end": 6.357,
+          "text": "you"
+        },
+        {
+          "word": "still",
+          "start": 6.369,
+          "end": 6.667,
+          "text": "still"
+        },
+        {
+          "word": "need",
+          "start": 6.679,
+          "end": 7.012,
+          "text": "need,"
+        },
+        {
+          "word": "or",
+          "start": 7.179,
+          "end": 7.429,
+          "text": "or"
+        },
+        {
+          "word": "search",
+          "start": 7.44,
+          "end": 8.036,
+          "text": "search."
+        }
+      ]
+    },
+    {
+      "id": "players",
+      "file": "voice/players.mp3",
+      "duration": 4.056,
+      "words": [
+        {
+          "word": "Everyone",
+          "start": 0.071,
+          "end": 0.452,
+          "text": "Everyone"
+        },
+        {
+          "word": "in",
+          "start": 0.464,
+          "end": 0.512,
+          "text": "in"
+        },
+        {
+          "word": "the",
+          "start": 0.524,
+          "end": 0.595,
+          "text": "the"
+        },
+        {
+          "word": "car",
+          "start": 0.595,
+          "end": 0.929,
+          "text": "car"
+        },
+        {
+          "word": "can",
+          "start": 0.94,
+          "end": 1.095,
+          "text": "can"
+        },
+        {
+          "word": "play",
+          "start": 1.107,
+          "end": 1.393,
+          "text": "play"
+        },
+        {
+          "word": "on",
+          "start": 1.405,
+          "end": 1.548,
+          "text": "on"
+        },
+        {
+          "word": "one",
+          "start": 1.548,
+          "end": 1.738,
+          "text": "one"
+        },
+        {
+          "word": "phone",
+          "start": 1.75,
+          "end": 2.119,
+          "text": "phone,"
+        },
+        {
+          "word": "each",
+          "start": 2.679,
+          "end": 2.881,
+          "text": "each"
+        },
+        {
+          "word": "with",
+          "start": 2.881,
+          "end": 2.988,
+          "text": "with"
+        },
+        {
+          "word": "their",
+          "start": 3.0,
+          "end": 3.143,
+          "text": "their"
+        },
+        {
+          "word": "own",
+          "start": 3.143,
+          "end": 3.286,
+          "text": "own"
+        },
+        {
+          "word": "color",
+          "start": 3.298,
+          "end": 3.714,
+          "text": "color."
+        }
+      ]
+    },
+    {
+      "id": "groups",
+      "file": "voice/groups.mp3",
+      "duration": 9.168,
+      "words": [
+        {
+          "word": "Or",
+          "start": 0.083,
+          "end": 0.262,
+          "text": "Or"
+        },
+        {
+          "word": "play",
+          "start": 0.262,
+          "end": 0.548,
+          "text": "play"
+        },
+        {
+          "word": "on",
+          "start": 0.56,
+          "end": 0.75,
+          "text": "on"
+        },
+        {
+          "word": "separate",
+          "start": 0.762,
+          "end": 1.06,
+          "text": "separate"
+        },
+        {
+          "word": "phones",
+          "start": 1.071,
+          "end": 1.583,
+          "text": "phones."
+        },
+        {
+          "word": "Start",
+          "start": 1.976,
+          "end": 2.238,
+          "text": "Start"
+        },
+        {
+          "word": "a",
+          "start": 2.25,
+          "end": 2.298,
+          "text": "a"
+        },
+        {
+          "word": "group",
+          "start": 2.31,
+          "end": 2.667,
+          "text": "group,"
+        },
+        {
+          "word": "text",
+          "start": 2.929,
+          "end": 3.214,
+          "text": "text"
+        },
+        {
+          "word": "friends",
+          "start": 3.226,
+          "end": 3.452,
+          "text": "friends"
+        },
+        {
+          "word": "the",
+          "start": 3.452,
+          "end": 3.524,
+          "text": "the"
+        },
+        {
+          "word": "code",
+          "start": 3.536,
+          "end": 3.905,
+          "text": "code,"
+        },
+        {
+          "word": "and",
+          "start": 4.274,
+          "end": 4.452,
+          "text": "and"
+        },
+        {
+          "word": "everyone's",
+          "start": 4.595,
+          "end": 5.036,
+          "text": "everyone's"
+        },
+        {
+          "word": "plates",
+          "start": 5.048,
+          "end": 5.417,
+          "text": "plates"
+        },
+        {
+          "word": "sync",
+          "start": 5.429,
+          "end": 5.762,
+          "text": "sync"
+        },
+        {
+          "word": "through",
+          "start": 5.774,
+          "end": 6.012,
+          "text": "through"
+        },
+        {
+          "word": "iCloud",
+          "start": 6.024,
+          "end": 6.607,
+          "text": "iCloud."
+        },
+        {
+          "word": "You",
+          "start": 6.964,
+          "end": 7.06,
+          "text": "You"
+        },
+        {
+          "word": "can",
+          "start": 7.071,
+          "end": 7.214,
+          "text": "can"
+        },
+        {
+          "word": "join",
+          "start": 7.226,
+          "end": 7.512,
+          "text": "join"
+        },
+        {
+          "word": "as",
+          "start": 7.524,
+          "end": 7.679,
+          "text": "as"
+        },
+        {
+          "word": "many",
+          "start": 7.679,
+          "end": 7.988,
+          "text": "many"
+        },
+        {
+          "word": "groups",
+          "start": 8.0,
+          "end": 8.286,
+          "text": "groups"
+        },
+        {
+          "word": "as",
+          "start": 8.298,
+          "end": 8.381,
+          "text": "as"
+        },
+        {
+          "word": "you",
+          "start": 8.393,
+          "end": 8.476,
+          "text": "you"
+        },
+        {
+          "word": "like",
+          "start": 8.488,
+          "end": 8.821,
+          "text": "like."
+        }
+      ]
+    },
+    {
+      "id": "modes",
+      "file": "voice/modes.mp3",
+      "duration": 4.824,
+      "words": [
+        {
+          "word": "Race",
+          "start": 0.06,
+          "end": 0.31,
+          "text": "Race"
+        },
+        {
+          "word": "for",
+          "start": 0.31,
+          "end": 0.405,
+          "text": "for"
+        },
+        {
+          "word": "the",
+          "start": 0.417,
+          "end": 0.488,
+          "text": "the"
+        },
+        {
+          "word": "podium",
+          "start": 0.488,
+          "end": 0.929,
+          "text": "podium,"
+        },
+        {
+          "word": "or",
+          "start": 1.44,
+          "end": 1.619,
+          "text": "or"
+        },
+        {
+          "word": "switch",
+          "start": 1.631,
+          "end": 1.952,
+          "text": "switch"
+        },
+        {
+          "word": "to",
+          "start": 1.952,
+          "end": 2.036,
+          "text": "to"
+        },
+        {
+          "word": "co-op",
+          "start": 2.048,
+          "end": 2.488,
+          "text": "co-op"
+        },
+        {
+          "word": "and",
+          "start": 2.56,
+          "end": 2.702,
+          "text": "and"
+        },
+        {
+          "word": "fill",
+          "start": 2.714,
+          "end": 3.083,
+          "text": "fill"
+        },
+        {
+          "word": "one",
+          "start": 3.095,
+          "end": 3.298,
+          "text": "one"
+        },
+        {
+          "word": "shared",
+          "start": 3.31,
+          "end": 3.655,
+          "text": "shared"
+        },
+        {
+          "word": "list",
+          "start": 3.667,
+          "end": 3.917,
+          "text": "list"
+        },
+        {
+          "word": "as",
+          "start": 3.929,
+          "end": 4.024,
+          "text": "as"
+        },
+        {
+          "word": "a",
+          "start": 4.036,
+          "end": 4.083,
+          "text": "a"
+        },
+        {
+          "word": "team",
+          "start": 4.083,
+          "end": 4.476,
+          "text": "team."
+        }
+      ]
+    },
+    {
+      "id": "outro",
+      "file": "voice/outro.mp3",
+      "duration": 6.168,
+      "words": [
+        {
+          "word": "Made",
+          "start": 0.071,
+          "end": 0.262,
+          "text": "Made"
+        },
+        {
+          "word": "with",
+          "start": 0.274,
+          "end": 0.429,
+          "text": "with"
+        },
+        {
+          "word": "Swift",
+          "start": 0.429,
+          "end": 0.75,
+          "text": "SwiftUI"
+        },
+        {
+          "word": "and",
+          "start": 1.333,
+          "end": 1.488,
+          "text": "and"
+        },
+        {
+          "word": "CloudKit",
+          "start": 1.5,
+          "end": 2.083,
+          "text": "CloudKit."
+        },
+        {
+          "word": "Built",
+          "start": 2.464,
+          "end": 2.75,
+          "text": "Built"
+        },
+        {
+          "word": "by",
+          "start": 2.762,
+          "end": 2.893,
+          "text": "by"
+        },
+        {
+          "word": "Nikhil",
+          "start": 2.905,
+          "end": 3.262,
+          "text": "Nikhil"
+        },
+        {
+          "word": "Math",
+          "start": 3.274,
+          "end": 3.69,
+          "text": "Math."
+        },
+        {
+          "word": "Get",
+          "start": 4.06,
+          "end": 4.226,
+          "text": "Get"
+        },
+        {
+          "word": "Plate",
+          "start": 4.238,
+          "end": 4.452,
+          "text": "Plate"
+        },
+        {
+          "word": "Chase",
+          "start": 4.464,
+          "end": 4.762,
+          "text": "Chase"
+        },
+        {
+          "word": "free",
+          "start": 4.774,
+          "end": 5.024,
+          "text": "free"
+        },
+        {
+          "word": "on",
+          "start": 5.024,
+          "end": 5.107,
+          "text": "on"
+        },
+        {
+          "word": "the",
+          "start": 5.119,
+          "end": 5.179,
+          "text": "the"
+        },
+        {
+          "word": "App",
+          "start": 5.19,
+          "end": 5.369,
+          "text": "App"
+        },
+        {
+          "word": "Store",
+          "start": 5.369,
+          "end": 5.821,
+          "text": "Store."
+        }
+      ]
+    }
+  ]
+}

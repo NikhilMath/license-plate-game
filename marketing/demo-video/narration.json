@@ -1,0 +1,36 @@
+{
+  "voice": "en-US-AvaMultilingualNeural",
+  "rate": "+5%",
+  "sections": [
+    {
+      "id": "hook",
+      "say": "Ever fought over who spotted that Vermont plate first?"
+    },
+    {
+      "id": "intro",
+      "say": "Plate Chase is a free iPhone game for road trips. Spot license plates from all fifty states and D.C., with family or friends.",
+      "captions": { "fifty": "50", "D.C.,": "DC," }
+    },
+    {
+      "id": "spot",
+      "say": "See a plate? Tap it. Every state has its own plate, and your ring fills up as you go. Filter by what you still need, or search."
+    },
+    {
+      "id": "players",
+      "say": "Everyone in the car can play on one phone, each with their own color."
+    },
+    {
+      "id": "groups",
+      "say": "Or play on separate phones. Start a group, text friends the code, and everyone's plates sync through iCloud. You can join as many groups as you like."
+    },
+    {
+      "id": "modes",
+      "say": "Race for the podium, or switch to co-op and fill one shared list as a team."
+    },
+    {
+      "id": "outro",
+      "say": "Made with Swift U.I. and CloudKit. Built by Nikhil Math. Get Plate Chase free on the App Store.",
+      "captions": { "Swift": "SwiftUI", "U.I.": "" }
+    }
+  ]
+}

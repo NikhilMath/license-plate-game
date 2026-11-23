@@ -1,0 +1,19 @@
+{
+  "name": "plate-chase-demo-video",
+  "private": true,
+  "description": "The Plate Chase demo video for LinkedIn and TikTok, made with Remotion.",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts PlateChaseDemo out/plate-chase-demo.mp4 --codec=h264 --audio-codec=aac --crf=18"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.541",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "remotion": "4.0.541"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.2",
+    "typescript": "5.9.3"
+  }
+}

@@ -1,0 +1,26 @@
+# A UI test that taps through Plate Chase in demo mode at a human pace, for the demo video.
+# It drives the installed app by bundle ID, so it doesn't change the app's own Xcode project.
+# Generate with `xcodegen` in this folder; see ../README.md for the full recording steps.
+name: DemoRecorder
+options:
+  bundleIdPrefix: com.nikhilmath
+  deploymentTarget:
+    iOS: "17.0"
+targets:
+  DemoRecorderUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [DemoRecorderUITests]
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGN_STYLE: Manual
+        SWIFT_VERSION: "5.0"
+schemes:
+  DemoRecorder:
+    build:
+      targets:
+        DemoRecorderUITests: [test]
+    test:
+      targets: [DemoRecorderUITests]

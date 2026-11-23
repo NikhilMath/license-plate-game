@@ -51,6 +51,14 @@ final class FriendSync {
             store.activeGroupCode = code
             return
         }
+        #if DEBUG
+        if DemoData.isEnabled {
+            store.addGroup(code: code, name: name, mode: store.mode, modeChangedAt: store.modeChangedAt)
+            store.activeGroupCode = code
+            lastSynced[code] = Date()
+            return
+        }
+        #endif
         isWorking = true
         defer { isWorking = false }
         do {
@@ -114,6 +122,13 @@ final class FriendSync {
     func sync() async {
         let codes = store.groups.map(\.code)
         guard !codes.isEmpty else { return }
+        #if DEBUG
+        if DemoData.isEnabled {
+            // Demo friends live only on this phone. Never read or write the real groups.
+            for code in codes where lastSynced[code] == nil { lastSynced[code] = Date() }
+            return
+        }
+        #endif
         var failure: Error?
         if needsUpload {
             do {
@@ -162,6 +177,9 @@ final class FriendSync {
     }
 
     private func deleteRecords(_ ids: [UUID], code: String) async {
+        #if DEBUG
+        if DemoData.isEnabled { return }
+        #endif
         _ = try? await database.modifyRecords(saving: [], deleting: ids.map { recordID(code, $0) })
     }
 

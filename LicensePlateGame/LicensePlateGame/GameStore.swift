@@ -151,6 +151,13 @@ final class GameStore {
     init() {
         let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        #if DEBUG
+        if DemoData.isEnabled {
+            fileURL = dir.appendingPathComponent("demo.json")
+            loadDemo()
+            return
+        }
+        #endif
         fileURL = dir.appendingPathComponent("game.json")
         load()
     }
@@ -348,6 +355,18 @@ final class GameStore {
             localModeChangedAt = changedAt
         }
     }
+
+    #if DEBUG
+    /// Starts from `DemoData` instead of the saved game.
+    private func loadDemo() {
+        isLoading = true
+        defer { isLoading = false }
+        players = DemoData.players
+        currentPlayerID = players.first?.id
+        groups = DemoData.groups
+        activeGroupCode = DemoData.activeGroupCode
+    }
+    #endif
 
     private func save() {
         guard !isLoading else { return }
